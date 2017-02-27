@@ -1,0 +1,115 @@
+#!/bin/sh
+
+. /etc/conf.d/cpufreq.conf
+
+cpuinfo_min_freq=`cat $CF_DIR/cpuinfo_min_freq`
+cpuinfo_max_freq=`cat $CF_DIR/cpuinfo_max_freq`
+
+cf_start() {
+
+if test -n "$1"; then
+  scaling_governor=$1
+else
+  scaling_governor=$scaling_governor_def
+fi
+
+GOV_DIR=$CF_DIR/$scaling_governor
+if test "$modprobe" == "1"; then
+  /sbin/modprobe cpufreq_${scaling_governor}
+fi
+
+if test -n "$scaling_governor"; then
+  if grep -qw $scaling_governor $CF_DIR/scaling_available_governors; then
+    echo $scaling_governor > $CF_DIR/scaling_governor
+    echo $scaling_governor > $CF2_DIR/scaling_governor
+  else
+    echo "ERROR: $scaling_governor governor isn't available"
+    exit 1
+  fi
+else
+  echo "ERROR: No governors given"
+  exit 1
+fi
+
+echo " * Starting `basename $0`: Adjusting CPU frequency scaling parameters"
+echo "   $scaling_governor governor selected"
+
+if test -n "$scaling_min_freq"; then
+  if test $scaling_min_freq -lt $cpuinfo_min_freq; then
+    scaling_min_freq=$cpuinfo_min_freq
+  fi
+else
+  scaling_min_freq=$cpuinfo_min_freq
+fi
+if test -n "$scaling_max_freq"; then
+  if test $scaling_max_freq -gt $cpuinfo_max_freq; then
+    scaling_max_freq=$cpuinfo_max_freq
+  fi
+else
+  scaling_max_freq=$cpuinfo_max_freq
+fi
+if test $scaling_max_freq -ge $scaling_min_freq; then
+  echo $scaling_min_freq > $CF_DIR/scaling_min_freq
+  echo $scaling_min_freq > $CF2_DIR/scaling_min_freq
+  echo "   scaling_min_freq = ${scaling_min_freq}kHz"
+  echo $scaling_max_freq > $CF_DIR/scaling_max_freq
+  echo $scaling_max_freq > $CF2_DIR/scaling_max_freq
+  echo "   scaling_max_freq = ${scaling_max_freq}kHz"
+fi
+
+if test $up_threshold -gt $down_threshold; then
+  echo $up_threshold > $GOV_DIR/up_threshold
+  echo "   up_threshold = ${up_threshold}%"
+  if test -e $GOV_DIR/down_threshold; then
+    echo $down_threshold > $GOV_DIR/down_threshold
+    echo "   down_threshold = ${down_threshold}%"
+  fi
+fi
+
+if test $sampling_rate -ge `cat $GOV_DIR/sampling_rate_min` -a $sampling_rate -le `cat $GOV_DIR/sampling_rate_max`; then
+  echo $sampling_rate > $GOV_DIR/sampling_rate
+  echo "   sampling_rate = ${sampling_rate}us"
+fi
+
+if test -e $GOV_DIR/freq_step; then
+  echo $freq_step > $GOV_DIR/freq_step
+  echo "   freq_step = ${freq_step}"
+fi
+
+if test -e $GOV_DIR/sampling_down_factor; then
+  echo $sampling_down_factor > $GOV_DIR/sampling_down_factor
+  echo "   sampling_down_factor = ${sampling_down_factor}"
+fi
+
+if test -e $GOV_DIR/powersave_bias; then
+  echo $powersave_bias > $GOV_DIR/powersave_bias
+  echo "   powersave_bias = ${powersave_bias}"
+fi
+
+echo $ignore_nice_load > $GOV_DIR/ignore_nice_load
+if test $ignore_nice_load -gt 0; then
+  echo "   ignoring nice load"
+fi
+}
+
+cf_stop() {
+scaling_governor=`cat $CF_DIR/scaling_governor`
+echo performance > $CF_DIR/scaling_governor
+echo performance > $CF2_DIR/scaling_governor
+echo "CPU frequency scaling stopped; performance governor selected"
+
+if test "$modprobe" == "1"; then
+  rmmod cpufreq_${scaling_governor}
+fi
+}
+
+case "$1" in
+'start')
+  cf_start $2
+  ;;
+'stop')
+  cf_stop
+  ;;
+*)
+  echo "Usage:	`basename $0` <start|stop> [governor]"
+esac

@@ -1,0 +1,4 @@
+
+LAN_IF="eth0"
+WLAN_IF="wlan0"
+TIMEOUT="10"	# N x 0.5s

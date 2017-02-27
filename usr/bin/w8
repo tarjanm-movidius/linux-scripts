@@ -1,0 +1,23 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+  echo "error: Parameter missing! Usage: w8 <task_name> [check_delay [job [parameters]]]" >&2
+  exit 1
+fi
+
+MY_NAME="`basename $0`"
+TASK_NAME="$1"
+shift
+
+if [ -n "$1" ]; then
+  CHK_DELAY="$1"
+  shift
+else
+  CHK_DELAY=5
+fi
+
+while [ -n "`ps ax | grep -w ${TASK_NAME} | grep -v grep | grep -v ${MY_NAME}`" ]; do
+  sleep ${CHK_DELAY}
+done
+
+$@

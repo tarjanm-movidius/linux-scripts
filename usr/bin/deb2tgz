@@ -1,0 +1,258 @@
+#!/bin/bash
+
+###########################################################################
+#
+#	Shell program to Convert rpm and debian files to tar.gz format.
+#
+#	Copyright 2001, USM Bish <bish@nde.vsnl.net.in>.
+#
+#	This program is free software;  you can redistribute it and / or
+#	modify it under the terms of the  GNU General Public License  as
+#	published by the F ree Software Foundation;  either version 2 of 
+#	the License, or (at your option) any later version. 
+#
+#	This program is  distributed in the hope that it will be useful, 
+#	but  WITHOUT  ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+#	General Public License for more details.
+#
+#
+#	Usage:
+#
+#	2tgz.sh [ -h | --help ] [-d filename.deb] [-r filename.rpm]
+#
+#	Options:
+#
+#	-h, --help	      Display this help message and exit.
+#	-d  filename.deb      Convert .deb file to tar.gz
+#	-r  filename.rpm      Convert .rpm file to tar.gz
+#
+#
+#	Revisions:
+#
+#	Aug/02/2001	File created   .......... Ver 0.1
+#       Aug/02/2001     deb converter created ... Ver 0.2
+#       Aug/03/2001     rpm converter added  .... Ver 0.3   
+#
+#       Dependencies on other utils:
+#
+#       o less      In case not installed, change value of
+#                   MY_PAGER to your pager (viz view/ more etc.)
+#       o ar        Needed for debian file conversion
+#       o rpm2cpio  Needed for rpm conversion
+#       o cpio      - do -
+#
+###########################################################################
+
+
+###########################################################################
+#	Constants
+###########################################################################
+
+PROGNAME=$(basename $0)
+VERSION="0.3"
+TEMP_FILE=/tmp/${PROGNAME}.$$
+
+MY_PAGER=/usr/bin/less
+
+###########################################################################
+#	Functions
+###########################################################################
+
+function get_prefix
+{
+    echo $PACKAGE > $PROGNAME.1
+    rev $PROGNAME.1 > $PROGNAME.2
+    cat $PROGNAME.2 | cut -b 5- > $PROGNAME.1
+    rev $PROGNAME.1 > $PROGNAME.2
+    PREFIX=`cat $PROGNAME.2`
+}
+
+function view_tgz
+{
+   tar -tvvz < $PREFIX.tar.gz > $HOME/$PROGNAME.1
+   cat $HOME/$PROGNAME.1 | awk '{print $1"\t"$3"\t"$6}' > $HOME/$PROGNAME.2
+   echo -en "\nConstituents of tarball : $PREFIX.tar.gz\n\n" > $HOME/$PROGNAME.1
+   echo -en "Permissions     Size    Contents\n\n" >> $HOME/$PROGNAME.1
+   cat $HOME/$PROGNAME.2 >> $HOME/$PROGNAME.1
+   cat $HOME/$PROGNAME.1 | $MY_PAGER
+   clean_up
+}
+
+function done_message
+{
+   echo ""
+   echo "Done .... Please unpack in a temporary directory"
+   echo "Check that there are no filename conflicts ....."
+   echo "You may like to do an *ldd* of binaries to check"
+   echo "dependencies before installing."
+   echo ""
+   ls $PREFIX.*
+   echo -en "\nView contents of "$PREFIX.tar.gz" [y/ n] .. "
+   read YN
+   if [ "$YN" = "y" ]; then
+       view_tgz
+   fi
+   echo "Bye ... "  
+}
+    
+function clean_up
+{
+        rm -f ${TEMP_FILE}
+        rm -f $PROGNAME.1
+        rm -f $PROGNAME.2
+}
+
+
+function graceful_exit
+{
+	clean_up
+	exit
+}
+
+
+function error_exit 
+{
+	echo "${PROGNAME}: ${1:-"Unknown Error"}" >&2
+	clean_up
+	exit 1
+}
+
+
+function term_exit
+{
+	echo "${PROGNAME}: Terminated"
+	clean_up
+	exit
+}
+
+
+function int_exit
+{
+	echo "${PROGNAME}: Aborted by user"
+	clean_up
+	exit
+}
+
+
+function usage
+{
+	echo "Usage: ${PROGNAME} [-h | --help] [-d filename.deb] [-r filename.rpm]"
+}
+
+function helptext
+{
+	#####
+	#	Function to display help message for program
+	#	No arguments
+	#####
+	
+	local tab=$(echo -en "\t\t")
+		
+	cat <<- -EOF-
+
+        ${PROGNAME} ver. ${VERSION}	
+
+        This is a program to Convert rpm and debian files to tar.gz format.
+	
+        $(usage)
+	
+        Options:
+	
+        -h, --help	      Display this help message and exit.
+        -d  filename.deb      Convert .deb file to tar.gz
+        -r  filename.rpm      Convert .rpm file to tar.gz
+
+        Example: ${PROGNAME} -d package.deb  (to convert a .deb file)
+        		
+	-EOF-
+}	
+
+
+###########################################################################
+#	Program starts here
+###########################################################################
+
+# Trap TERM, HUP, and INT signals and properly exit
+
+trap term_exit TERM HUP
+trap int_exit INT
+
+# Process command line arguments
+
+if [ "$1" = "--help" ]; then
+    helptext
+    graceful_exit
+fi
+
+if [ "$1" = "" ]; then
+   if [ "$2" = "" ]; then
+      helptext
+      graceful_exit
+   fi
+fi
+
+# Process arguments - edit to taste
+
+while getopts ":hd:r:" opt; do
+
+    case $opt in
+    
+    d ) echo $PROGNAME"  Debian .deb conversion" 
+
+        PACKAGE="$2"
+        get_prefix
+
+        if [ -e $PACKAGE ]; then
+            ar -x $PACKAGE
+            rm -f control.tar.gz
+            rm -f debian-binary
+            mv data.tar.gz $PREFIX.tar.gz
+            done_message
+        else              # parm entered but incorrect
+            echo "Debian package [$PACKAGE] not found" 
+            echo "Quitting ... "
+            clean_up
+            exit 1  
+        fi
+        ;;
+    
+    r ) echo $PROGNAME"  RedHat .rpm conversion"
+
+        PACKAGE="$2"
+        get_prefix
+
+        if [ -e $PACKAGE ]; then
+            PD=`pwd`
+            mkdir /tmp/2tgz
+            rpm2cpio $PACKAGE > /tmp/2tgz/$PREFIX.cpio
+            cd /tmp/2tgz
+            cpio --extract --preserve-modification-time --make-directories < $PREFIX.cpio 1> /dev/null 2> /dev/null
+            TARGET=`ls -d */`
+            tar -cvvzf $PREFIX.tar.gz $TARGET 1> /dev/null 2> /dev/null
+            cp $PREFIX.tar.gz $PD
+            cd /tmp
+            rm -rf 2tgz/
+            cd $PD
+            done_message
+        else              # parm entered but incorrect
+            echo "RedHat package [$PACKAGE] not found" 
+            echo "Quitting ... "
+            clean_up
+            exit 1  
+        fi
+        ;;
+
+    h ) helptext
+        graceful_exit ;;
+        
+    * ) usage
+	exit 1
+
+    esac
+
+done
+
+graceful_exit
+
+#############################################################

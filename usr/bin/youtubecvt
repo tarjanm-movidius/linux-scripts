@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ $# -lt 2 ]; then
+  echo "Usage:" 1>&2
+  echo "`basename $0` video.mp4 audio.mp4a" 1>&2
+  exit 1
+fi
+
+if mencoder -o "${1}_" -oac mp3lame -ovc copy "${1}" -audiofile "${2}"; then
+  rm -i "${1}" "${2}"
+  if ! [ -e "${1}" ]; then mv "${1}_" "${1}"; fi
+fi

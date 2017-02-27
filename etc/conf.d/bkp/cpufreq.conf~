@@ -1,0 +1,12 @@
+scaling_governor_def=conservative
+sampling_down_factor=1
+down_threshold=15
+freq_step=5
+powersave_bias=0
+up_threshold=45
+ignore_nice_load=1
+sampling_rate=100000
+scaling_min_freq=800000
+scaling_max_freq=2501000
+CF_DIR=/sys/devices/system/cpu/cpu0/cpufreq
+CF2_DIR=/sys/devices/system/cpu/cpu1/cpufreq

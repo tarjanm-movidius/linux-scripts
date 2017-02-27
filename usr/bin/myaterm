@@ -1,0 +1,1 @@
+aterm -C -title Aterm +ut -geometry 100x40 +sb -fn -misc-fixed-*-*-*-*-14-*-*-*-*-*-iso8859-2 -ls -sl 300 -fg green -tr -sh 50 $@

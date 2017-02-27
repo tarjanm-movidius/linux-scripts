@@ -1,0 +1,69 @@
+# /etc/hosts: Local Host Database
+#
+# This file describes a number of aliases-to-address mappings for the for 
+# local hosts that share this file.
+#
+# In the presence of the domain name service or NIS, this file may not be 
+# consulted at all; see /etc/host.conf for the resolution order.
+#
+
+# IPv4 and IPv6 localhost aliases
+127.0.0.1	localhost
+127.0.0.1	lapos
+172.16.253.1	vmnet
+192.168.22.3	svn
+192.168.250.1	plc
+192.168.14.180	comsol
+::1		localhost
+
+#127.0.0.1	9gag.com
+127.0.0.1	webreklam.hu
+127.0.0.1	ads.waxum.hu
+127.0.0.1	www.bannermaker.hu
+127.0.0.1	www.qksrv.net
+127.0.0.1	gator.com
+127.0.0.1	www.gator.com
+127.0.0.1	webpdp.gator.com
+127.0.0.1	img.adverticum.net
+127.0.0.1	imgs.adverticum.net
+127.0.0.1	ad.adverticum.net
+127.0.0.1	ads.adverticum.net
+127.0.0.1	ads1.adverticum.net
+127.0.0.1	ads2.adverticum.net
+127.0.0.1	ads3.adverticum.net
+127.0.0.1	ads4.adverticum.net
+127.0.0.1	ad.gyaloglo.hu
+127.0.0.1	ad1.gyaloglo.hu
+127.0.0.1	ad2.gyaloglo.hu
+127.0.0.1	ad3.gyaloglo.hu
+127.0.0.1	sher.index.hu
+127.0.0.1	rehs.index.hu
+127.0.0.1	pagead.googlesyndication.com
+127.0.0.1	pagead2.googlesyndication.com
+127.0.0.1	bans.bride.ru
+127.0.0.1	advn01.com
+127.0.0.1	ad.yieldmanager.com
+127.0.0.1	bannermaker.hu
+127.0.0.1	adlog.com.com
+127.0.0.1	servedby.advertising.net
+127.0.0.1	servedby.advertising.com
+127.0.0.1	paypal.com
+
+#
+# Imaginary network.
+#10.0.0.2               myname
+#10.0.0.3               myfriend
+#
+# According to RFC 1918, you can use the following IP networks for private 
+# nets which will never be connected to the Internet:
+#
+#       10.0.0.0        -   10.255.255.255
+#       172.16.0.0      -   172.31.255.255
+#       192.168.0.0     -   192.168.255.255
+#
+# In case you want to be able to connect directly to the Internet (i.e. not 
+# behind a NAT, ADSL router, etc...), you need real official assigned 
+# numbers.  Do not try to invent your own network numbers but instead get one 
+# from your network provider (if any) or from your regional registry (ARIN, 
+# APNIC, LACNIC, RIPE NCC, or AfriNIC.)
+#

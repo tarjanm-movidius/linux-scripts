@@ -1,0 +1,12 @@
+#!/bin/sh
+
+skill blueman-applet
+/etc/init.d/bluetooth stop
+/etc/init.d/dbus stop
+
+BT=`/usr/sbin/rfkill list | grep hci0 - | cut -b 1 -`
+if [ -n "$BT" ]; then
+  /usr/sbin/rfkill block $BT
+fi
+
+rmmod -w bnep btusb rfcomm l2cap bluetooth

@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# ChOwners v0.3b - a script for making the users' home directories their own
+
+echo "$0 v0.3b" | rev | cut -d "/" -f 1 - | rev
+if test "`id -u`" != "0"; then
+    echo "You need root privileges to change file ownerships!" 1>&2
+    exit -1
+fi
+
+USERS=`ls -I ftp /home/`
+echo -n "Changing file ownerships for `whoami` ... "
+/bin/chown -R `whoami`:root /root
+echo "done"
+for CURRENTUSER in $USERS; do
+    echo -n "Changing file ownerships for user $CURRENTUSER ... "
+    /bin/chown -R $CURRENTUSER /home/$CURRENTUSER
+    if test $? -eq 0; then
+      echo "done"
+    else
+      echo "failed"
+    fi
+done
+
+exit
+echo -n "chmod'ing movies & MP3s ... "
+cd /home/tm196
+/bin/chmod -R +t MP3
+/bin/chmod -R a+r MP3 movies
+/bin/chmod -R ug+rw MP3 movies
+if test $? -eq 0; then
+  echo "done"
+else
+  echo "failed"
+fi

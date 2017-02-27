@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if [ "$1" = "--help" ]; then
+  echo "$(basename "$0") - Rename MP3 files to include track number from ID3 tag"
+  echo "Warning: renames all mp3 files in directory!"
+  echo ""
+  echo "Usage:"
+  echo "  $(basename "$0") [string to replace in name]"
+  exit
+fi
+
+for i in *.[Mm][Pp]3; do
+  NUM=$(id3info "$i" | grep TRCK | cut -d ':' -f 2 | tr -d ' ')
+  if [ $NUM -lt 10 ]; then NUM="0$NUM"; fi
+  if [ -n "$1" ]; then
+    NNAME=$(sed "s/$1/$NUM/" <<< "$i")
+  else
+    NNAME="$NUM - $i"
+  fi
+  mv "$i" "$NNAME"
+done

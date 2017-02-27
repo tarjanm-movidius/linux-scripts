@@ -1,0 +1,5 @@
+SERVER="kelenfold.joaseggem.net"
+USER="p2p"
+CLI_PORT=4000
+SCP_PORT=60000
+MLDONKEY_DIR="/mnt/hd/.mldonkey"

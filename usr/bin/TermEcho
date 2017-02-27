@@ -1,0 +1,9 @@
+#!/bin/sh
+
+TERMS="`ls -1 /dev/pts/* | tr '\n' ' '` `ls -1 /dev/tty* | grep -w tty[0-9] | tr '\n' ' '`"
+
+  for CTERM in ${TERMS}; do
+    if test -O ${CTERM}; then
+      echo $@ > ${CTERM}
+    fi
+  done

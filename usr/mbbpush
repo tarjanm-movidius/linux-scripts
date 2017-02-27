@@ -1,0 +1,3 @@
+#!/bin/sh
+
+obexftp -b 94:EB:CD:96:71:8B --nopath --noconn --uuid none -B3 -p $@

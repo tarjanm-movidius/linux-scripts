@@ -1,0 +1,60 @@
+#!/bin/sh
+
+D3D="/usr/bin/3ddesk"
+WCT="/usr/bin/wmctrl"
+TEST3D="/usr/bin/X11/3dsw test"
+
+gotodesk()
+{
+    if $TEST3D; then
+      $D3D --goto $1
+    else
+      $WCT -s `expr $1 - 1`
+    fi
+}
+
+goleft()
+{
+    if $TEST3D; then
+      $D3D --view goleft
+    else
+      CURRENT=`wmctrl -d | grep \* - | cut -d ' ' -f 1 -`
+      $WCT -s `expr $CURRENT - 1`
+    fi
+}
+
+goright()
+{
+    if $TEST3D; then
+      $D3D --view goright
+    else
+      CURRENT=`wmctrl -d | grep \* - | cut -d ' ' -f 1 -`
+      $WCT -s `expr $CURRENT + 1`
+    fi
+}
+
+zoom()
+{
+    if $TEST3D; then
+      $D3D --mode carousel --zoom --altmousebuttons
+    else
+      echo "3D coolness is off :(. Use '3dsw on' to activate it! "
+    fi
+}
+
+case "$1" in
+[1-8])
+  gotodesk $1
+  ;;
+'left')
+  goleft
+  ;;
+'right')
+  goright
+  ;;
+'zoom')
+  zoom
+  ;;
+*)
+  echo "Usage: `basename $0` [1-8]|left|right|zoom"
+esac

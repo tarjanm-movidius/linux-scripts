@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# MLDonkey torrent downloader. Secure CoPies torrent file to host and starts
+# download. Needs passwordless ssh authentication
+
+[ -z "$1" ] && exit 1
+
+. /etc/conf.d/mldonkey
+[ -z "${SCP_PORT}" ] && SCP_PORT=60000
+
+if [ "${SERVER}" = "localhost" -o "${SERVER}" = "127.0.0.1" ]; then
+  mv "$1" "${MLDONKEY_DIR}/torrents/downloads/"
+else
+  chmod 664 "$1"
+  if scp -pP ${SCP_PORT} "$1" "${USER}@${SERVER}:${MLDONKEY_DIR}/torrents/downloads"; then
+    rm "$1"
+  fi
+fi
+
+ml_download "torrents/downloads/`basename "$1"`"

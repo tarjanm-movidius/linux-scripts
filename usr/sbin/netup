@@ -1,0 +1,56 @@
+#!/bin/sh
+
+. /etc/conf.d/netup
+
+#LAN_IF="eth0"
+#WLAN_IF="wlan0"
+LAN_STATIC_IP=`grep -e ^config.$LAN_IF /etc/conf.d/net | cut -d '"' -f 2 - | cut -d '.' -f 1-4 - | cut -d ' ' -f 1 -`
+#TIMEOUT="10"	# N x 0.5s
+RETVAL=0
+
+killall wpa_supplicant dhcpcd > /dev/null 2> /dev/null
+
+ifconfig $LAN_IF up
+ifconfig $LAN_IF $LAN_STATIC_IP
+
+if ping -qc1w1 192.168.100.254 > /dev/null; then
+  /etc/init.d/proftpd start
+  /usr/sbin/chksmb
+else
+
+  if [ "`cat /sys/class/net/${LAN_IF}/carrier`" = "1" ]; then
+    /sbin/ifconfig $LAN_IF 0.0.0.0
+    /sbin/dhcpcd -L -C resolv.conf $LAN_IF
+    RETVAL=$?
+  else
+    ifconfig ${WLAN_IF} up
+    ifconfig ${LAN_IF} down
+    wpa_supplicant -qq -t -Dwext -i${WLAN_IF} -c/etc/wpa_supplicant/wpa_supplicant.conf > /var/log/wpa_supplicant &
+
+    # waiting for AP to be associated
+    I="0"
+    while [ "`cat /sys/class/net/${WLAN_IF}/carrier`" != "1" -a ${I} -lt ${TIMEOUT} ]; do
+      sleep 0.5
+      I=`expr $I + 1`
+    done
+
+    # if we didn't timeout...
+    if [ "`cat /sys/class/net/${WLAN_IF}/carrier`" = "1" ]; then
+      echo "Successfully associated '${WLAN_IF}' with an AP. Acquiring IP address"
+      dhcpcd -L -C resolv.conf ${WLAN_IF}
+      RETVAL=$?
+    else
+    # ...and if we did
+      echo "Unable to connect '${WLAN_IF}'. DIY!"
+      killall wpa_supplicant
+      ifconfig ${WLAN_IF} down
+      RETVAL=1
+    fi
+  fi
+
+fi
+
+if ! grep -q "127.0.0.1" /etc/resolv.conf; then
+  echo "nameserver 127.0.0.1" > /etc/resolv.conf
+fi
+exit $RETVAL

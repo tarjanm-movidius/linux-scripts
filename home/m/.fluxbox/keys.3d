@@ -1,0 +1,16 @@
+
+! 3D desktop change shortcuts
+
+Control F1 :ExecCommand /usr/bin/3ddesk --goto 1
+Control F2 :ExecCommand /usr/bin/3ddesk --goto 2
+Control F3 :ExecCommand /usr/bin/3ddesk --goto 3
+Control F4 :ExecCommand /usr/bin/3ddesk --goto 4
+Control F5 :ExecCommand /usr/bin/3ddesk --goto 5
+Control F6 :ExecCommand /usr/bin/3ddesk --goto 6
+Control F7 :ExecCommand /usr/bin/3ddesk --goto 7
+Control F8 :ExecCommand /usr/bin/3ddesk --goto 8
+Control F10 :ExecCommand 3ddesk --acquirecurrent; sleep 0.5; xset dpms force off
+!Control F10 :ExecCommand /usr/bin/X11/xscreensaver-command -lock
+Control Mod1 Right :ExecCommand /usr/bin/3ddesk --view goright
+Control Mod1 Left :ExecCommand /usr/bin/3ddesk --view goleft
+Control space :ExecCommand /usr/bin/3ddesk --mode carousel --zoom --altmousebuttons

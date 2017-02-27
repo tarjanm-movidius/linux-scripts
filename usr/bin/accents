@@ -1,0 +1,33 @@
+#!/bin/sh
+
+version="0.1a"
+
+# --- Checking proper parameter usage ---
+if test $# -eq 0; then
+      echo ""
+      echo "Usage: `basename $0` [--version] [file(s) to rename]" 1>&2
+      echo ""
+      exit 1
+fi
+if test "$1" = "--version"; then
+      echo ""
+      echo "`basename $0` - Filename accents remover version ${version}"
+      echo ""
+      exit 0
+fi
+
+# --- Undo file ---
+echo "#!/bin/sh" > mv_undo
+echo "" >> mv_undo
+
+# --- Renaming files ---
+while test $# -gt 0; do
+  if test -n "`echo $1 | grep -e [ÁÉÍÓÖÖÚÜÜáéíóöõúüû] -`"; then
+    FN=`echo $1 | tr [ÁÉÍÓÖÖÚÜÜáéíóöõúüû] [AEIOOOUUUaeiooouuu]`
+    echo "mv \"$FN\" \"$1\"" >> mv_undo
+    mv -v "$1" "$FN"
+  fi
+  shift
+done
+
+chmod 755 mv_undo

@@ -1,0 +1,56 @@
+# /etc/conf.d/local.start
+# This is a good place to load any misc programs
+# on startup (use &>/dev/null to hide output)
+
+. /etc/conf.d/brightness
+. /etc/conf.d/ntpclient
+
+echo " * Starting firewall ..."
+/etc/conf.d/firewall.sh start
+
+echo -ne $DEFAULT_BRTNS > $BRTNS_DEV
+
+#/sbin/modprobe npreal2 ttymajor=33 calloutmajor=38 verbose=0
+
+rm -f /tmp/.X0-lock
+rm -f /root/.xauth*
+
+#if grep -qwE "(nvidia|fglrx)" /proc/modules; then
+  echo -n " * Starting X"
+#  /usr/bin/xdm
+  /usr/bin/slim
+  echo " ..."
+#else
+#  echo " * Error starting X: video driver module not found"
+#fi
+
+mkdir -p /dev/shm/firefox/
+chown m:users /dev/shm/firefox/
+mkdir /dev/shm/tmp/
+chmod 1777 /dev/shm/tmp/
+unpigz < /home/m/.mozilla/firefox/ramdisk.tgz | tar x -C /dev/shm/firefox/
+
+if [ -x /usr/sbin/netup ]; then
+  /usr/sbin/netup
+fi
+
+/etc/init.d/numlock restart
+
+if ping -qc1t1w1 ${NTPSERV1} > /dev/null || ping -qc1t1w1 ${NTPSERV2} > /dev/null; then
+  if ! ntpclient -s -h ${NTPSERV1}; then ntpclient -s -h ${NTPSERV2}; fi
+#  /etc/init.d/ntp-client start
+fi
+
+/etc/init.d/syslog-ng start
+
+/etc/init.d/vixie-cron start
+
+/etc/init.d/sshd start
+
+#/etc/init.d/vmware start
+
+if [ -x /etc/conf.d/cpufreq -a -z "`ps ax | grep [a]ccel1m`" ]; then
+  /etc/conf.d/cpufreq start
+fi
+
+sudo -u m screen -S mldonkey -d -m mlnet

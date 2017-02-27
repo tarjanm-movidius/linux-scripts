@@ -1,0 +1,3 @@
+#export BRTNS_DEV="/sys/class/backlight/radeon_bl0/brightness"
+export BRTNS_DEV=/sys/devices/pci0000:00/0000:00:01.0/0000:01:00.0/drm/card0/card0-LVDS-1/radeon_bl0/brightness
+export DEFAULT_BRTNS=128

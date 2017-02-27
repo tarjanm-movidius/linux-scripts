@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+  echo "Error: parameter missing! Usage: `basename $0` <filename>" 1>&2
+  exit 1
+fi
+
+if ! [ -f "$1" ]; then
+  echo "Error: file '$1' not found!" 1>&2
+  exit 1
+fi
+
+echo -n `basename "$1"`
+FILESIZE=`ls -l "$1" | cut -d ' ' -f 5 -`
+echo -n " $FILESIZE "
+RMDSUM=`openssl dgst -ripemd160 "$1" | cut -d '=' -f 2 -`
+echo -n "RMD160$RMDSUM "
+SHA1SUM=`sha1sum "$1" | cut -d ' ' -f 1 -`
+echo -n "SHA1 $SHA1SUM "
+SHA256SUM=`sha256sum "$1" | cut -d ' ' -f 1 -`
+echo "SHA256 $SHA256SUM"

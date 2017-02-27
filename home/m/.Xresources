@@ -1,0 +1,15 @@
+Vncviewer*grabKeyboard: True
+Vncviewer.grabKeyboard: True
+vncviewer*grabKeyboard: true
+vncviewer.grabKeyboard: true
+
+!True-Transparency
+!urxvt*depth: 32
+!urxvt*background: rgba:0000/0000/0000/cccc
+
+!Fake-Transparency
+urxvt*transparent: true
+urxvt*shading: 20
+urxvt.searchable-scrollback: CM-s
+urxvt*foreground: #00C300
+urxvt*scrollBar: 0

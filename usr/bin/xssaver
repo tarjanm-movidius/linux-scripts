@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if /usr/bin/X11/3dsw test; then
+  if test -z "`ps ax | grep -e xscreensaver | grep -v grep`"; then
+    /usr/bin/X11/xscreensaver -nosplash &
+    sleep 1
+  fi
+  /usr/bin/X11/xscreensaver-command -activate
+else
+  xlock -nolock -mode dclock
+fi

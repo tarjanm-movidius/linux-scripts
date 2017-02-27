@@ -1,0 +1,14 @@
+
+! 2D desktop change shortcuts
+
+Control F1 :WorkSpace 1
+Control F2 :WorkSpace 2
+Control F3 :WorkSpace 3
+Control F4 :WorkSpace 4
+Control F5 :WorkSpace 5
+Control F6 :WorkSpace 6
+Control F7 :WorkSpace 7
+Control F8 :WorkSpace 8
+Control F10 :ExecCommand sleep 0.6; xset dpms force off
+Control Mod1 Right :NextWorkspace
+Control Mod1 Left :PrevWorkspace

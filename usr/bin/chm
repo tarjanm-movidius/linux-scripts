@@ -1,0 +1,4 @@
+#!/bin/sh
+
+chmod 644 $@
+chmod a+X $@

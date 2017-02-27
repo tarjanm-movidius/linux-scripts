@@ -1,0 +1,18 @@
+#!/bin/sh
+
+SD_DEVICE="/dev/sdd"
+MOUNTPOINT="/mnt/usb"
+MD_DEVICE="`mdadm -Q /dev/md/* | grep 914 | cut -d ':' -f 1 -`"
+
+if [ "$1" = "-u" ]; then
+  if umount -v $MOUNTPOINT; then
+    if mdadm --stop --scan; then
+      hdparm -y $SD_DEVICE
+    fi
+  fi
+else
+  hdparm -S120 $SD_DEVICE
+  if [ -n "$MD_DEVICE" ]; then
+    mount -v $MD_DEVICE $MOUNTPOINT
+  fi
+fi

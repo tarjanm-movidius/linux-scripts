@@ -1,0 +1,26 @@
+#!/bin/sh
+
+TEMPLIST=`ls -1 *.[Mm][Pp]3 | tr '\n' '|'`
+UNDOFILE="rn_undo"
+I=1
+OFF1=`expr $1 + 1`
+OFF2=`expr $2 + 1`
+
+if [ $OFF1 -gt 0 -a $OFF2 -gt 0 -a `expr $OFF1 + $OFF2` -gt 2 ]; then
+ echo "Offset from beginning is $OFF1, from the end it's $OFF2"
+ echo "#!/bin/sh" > $UNDOFILE
+ echo >> $UNDOFILE
+ while test -n "`echo $TEMPLIST | cut -d '|' -f $I -`"; do
+    CURRENT=`echo "$TEMPLIST" | cut -d '|' -f $I -`
+    NEW_NAME=`echo $CURRENT | cut -b $OFF1- - | rev | cut -b $OFF2- - | rev`
+    mv -vf "$CURRENT" "$NEW_NAME"
+    if [ $? -eq 0 ]; then
+	echo "mv -vf \"$NEW_NAME\" \"$CURRENT\"" >> $UNDOFILE
+    fi
+    I=`expr $I + 1`
+ done
+ chmod 755 "$UNDOFILE"
+else
+ echo "Usage: $0 <Offset1> [Offset2]" 1>&2
+ exit -1
+fi

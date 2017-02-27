@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# FEH frontend for Midnight Commander
+
+if [ -z "$1" ]; then
+  echo "Usage: `basename $0` <image_name>"
+fi
+
+FILELIST=`find . -maxdepth 1 -type f -regex ".*\.[Jj][Pp][Ee]?[Gg]\|.*\.[Pp][Nn][Gg]\|.*\.[Xx][Pp][Mm]\|.*\.[Bb][Mm][Pp]\|.*\.[GgTt][Ii][Ff]?[Ff]" | sort`
+IFS='
+'
+CURRFILE="`basename $1`"
+SORTEDLIST=""
+LISTEND=""
+
+set $FILELIST
+
+while [ -n "$1" ]; do
+  if [ "`basename $1`" == "$CURRFILE" ]; then break; fi
+  LISTEND="$LISTEND
+$1"
+  shift
+done
+
+while [ -n "$1" ]; do
+  SORTEDLIST="$SORTEDLIST
+$1"
+  shift
+done
+
+feh -ZFd $SORTEDLIST $LISTEND
+
+exit

@@ -1,0 +1,45 @@
+#!/bin/sh
+
+date '+%Y %b %e (%a), %H:%M'
+if test -e /proc/acpi/alarm; then
+  echo -n "/proc/acpi/alarm: "
+  cat /proc/acpi/alarm
+else
+  WOL_TIME=`ssh -p 60000 root@kelenfold crontab -l | grep bitch`
+  echo -n "WOL wakeup time: `cut -f 2 -d ' ' - <<< $WOL_TIME`:`cut -f 1 -d ' ' - <<< $WOL_TIME`"
+fi
+
+echo
+echo "crontab:"
+crontab -l | grep wakey -
+echo
+TERMS="`ls -1 /dev/pts/* | tr '\n' ' '` `ls -1 /dev/tty* | grep -w tty[0-9] | tr '\n' ' '`"
+TIME=`expr $1 + 0`
+if test ${TIME} -le 0; then
+  TIME=40
+fi
+
+/usr/bin/3dsw off
+if test -n "`ps ax | grep -e pidgin | grep -v grep`"; then
+  killall pidgin >/dev/null 2>&1
+fi
+
+while test ${TIME} -gt 0; do
+  for CTERM in ${TERMS}; do
+    if test -O ${CTERM}; then
+      echo "${TIME} minutes left to shutdown." > ${CTERM}
+    fi
+  done
+  if test ${TIME} -ge 15; then
+    TIME=`expr ${TIME} - 10`
+    sleep 10m
+  elif test ${TIME} -gt 5; then
+    TIME=`expr ${TIME} - 5`
+    sleep 5m
+  else
+    sleep ${TIME}m
+    TIME=0
+    /usr/bin/logger -t `echo $0 | rev | cut -d '/' -f 1 - | rev` "Halting system"
+    halt
+  fi
+done

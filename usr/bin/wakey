@@ -1,0 +1,35 @@
+#!/bin/sh
+
+PLDIR=~/.wakey
+LOGFILE=$PLDIR/.wakey.log
+PLAYERS="mplayer mpg123 mpg321 madplay"
+PATHS="/usr/bin /usr/local/bin"
+
+USER=`/usr/bin/whoami`
+PLAYER=""
+for CURRENT in $PLAYERS; do
+  for CPATH in $PATHS; do
+    PLAYER="$PLAYER `which $CPATH/$CURRENT 2>/dev/null`"
+  done
+done
+
+PLAYER="`echo $PLAYER | cut -d ' ' -f1 - `"
+skill -9 $PLAYERS
+if test "$1" != "--stop"; then
+  if test -n "`ps ax | grep -e xmms | grep -v grep`"; then
+    xmms -s
+  fi
+  mv -f $LOGFILE $LOGFILE.bkp
+  tail -n 101 $LOGFILE.bkp > $LOGFILE
+  rm -f $LOGFILE.bkp
+  echo "" >> $LOGFILE
+  echo "  ******************************" >> $LOGFILE
+  echo "" >> $LOGFILE
+  echo "$USER: `date '+%Y %b %e (%a), %H:%M:%S'`" >> $LOGFILE
+  echo "Using $PLAYER $@" >> $LOGFILE
+  echo "" >> $LOGFILE
+  /usr/sbin/alsactl restore >> $LOGFILE 2>&1
+  /usr/bin/aumix -L >> $LOGFILE 2>&1 
+  echo "" >> $LOGFILE
+  $PLAYER $@ $PLDIR/* 2>>$LOGFILE | grep -i "\.mp3" - >> $LOGFILE
+fi

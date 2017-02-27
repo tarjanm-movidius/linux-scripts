@@ -1,0 +1,117 @@
+[startup]  {~/.fluxbox/fbstart}
+[app] (title=Aterm1)
+  [Workspace]	{0}
+  [Dimensions]	{634 586}
+  [Position]	(UPPERLEFT)	{0 0}
+  [Deco]	{NORMAL}
+[end]
+[app] (name=ascpu)
+  [Head]	{0}
+  [Dimensions]	{54 76}
+  [Deco]	{NONE}
+  [Sticky]	{yes}
+  [Layer]	{4}
+  [Close]	{yes}
+  [Alpha]	{188 204}
+[end]
+[app] (name=xmms)
+  [Workspace]	{0}
+  [Dimensions]	{726 443}
+  [Position]	(UPPERLEFT)	{0 308}
+[end]
+[app] (name=XMMS_Player)
+  [Workspace]	{0}
+[end]
+[app] (name=XMMS_Playlist)
+  [Workspace]	{0}
+[end]
+[app] (name=XMMS_Equalizer)
+  [Workspace]	{0}
+[end]
+[app] (title=mc)
+  [Deco]	{NONE}
+  [Maximized]	{yes}
+[end]
+[app] (title=MC)
+  [Workspace]	{1}
+  [Deco]	{NONE}
+  [Maximized]	{yes}
+[end]
+[app] (title=Aterm2)
+  [Workspace]	{2}
+  [Dimensions]	{704 586}
+  [Position]	(UPPERLEFT)	{0 0}
+[end]
+[app] (title=Aterm3)
+  [Workspace]	{2}
+  [Dimensions]	{704 586}
+  [Position]	(UPPERLEFT)	{662 0}
+[end]
+[app] (role=browser)
+  [Workspace]	{3}
+  [Deco]	{NONE}
+  [Maximized]	{yes}
+  [Jump]	{yes}
+[end]
+[app] (class=Aurora)
+  [Workspace]	{3}
+  [Jump]	{yes}
+[end]
+[app] (class=Firefox)
+  [Workspace]	{3}
+  [Jump]	{yes}
+[end]
+[app] (name=skype) (class=Skype) (role=ConversationsWindow)
+  [Workspace]	{4}
+  [Dimensions]	{956 580}
+  [Position]	(UPPERLEFT)	{154 172}
+[end]
+[app] (name=skype) (class=Skype) (role=CallWindow)
+  [Workspace]	{4}
+  [Dimensions]	{730 580}
+  [Position]	(UPPERLEFT)	{380 0}
+[end]
+[app] (name=skype) (class=Skype) (title=File Transfers)
+  [Workspace]	{4}
+  [Dimensions]	{956 172}
+  [Position]	(UPPERLEFT)	{154 0}
+[end]
+[app] (name=skype) (class=Skype) (title=Choose File\(s\) to send to selected users)
+  [Workspace]	{4}
+  [Dimensions]	{745 629}
+  [Position]	(UPPERLEFT)	{363 0}
+[end]
+[transient] (name=skype) (class=Skype) (title=Call Technical Info)
+  [Workspace]	{4}
+  [Dimensions]	{380 422}
+  [Position]	(UPPERLEFT)	{0 0}
+[end]
+[app] (name=skype) (class=Skype)
+  [Workspace]	{4}
+  [Dimensions]	{256 709}
+  [Position]	(UPPERLEFT)	{1110 0}
+[end]
+[app] (name=Mail) (class=Thunderbird) (role=3pane)
+  [Workspace]	{4}
+  [Dimensions]	{1145 752}
+  [Position]	(UPPERLEFT)	{0 0}
+  [Deco]	{NONE}
+[end]
+[app] (name=claws-mail) (class=Claws-mail) (role=mainwindow)
+  [Workspace]	{4}
+  [Dimensions]	{1145 752}
+  [Position]	(UPPERLEFT)	{0 0}
+  [Deco]	{NONE}
+[end]
+[app] (name=vmware)
+  [Workspace]	{5}
+[end]
+[app] (name=vmplayer) (class=Vmplayer)
+  [Workspace]	{5}
+  [Position]	(UPPERLEFT)	{0 -20}
+  [Deco]	{NONE}
+[end]
+[app] (name=urxvt) (class=URxvt)
+  [Dimensions]	{53% 74%}
+  [Close]	{yes}
+[end]

@@ -1,0 +1,105 @@
+
+[begin] (-lapos-)
+      [exec] (aterm) {urxvt -C}
+      [exec] (mc) {urxvt -C -title MC -e mc}
+      [exec] (firefox) {firefox}
+      [exec] (thunderbird) {thunderbird}
+      [exec] (ptkdic) {ptkdic}
+      [exec] (skype) {apulse skype}
+      [exec] (seamonkey) {seamonkey}
+      [exec] (CodeLite) {codelite}
+      [exec] (vm) {cd ~/vmware/vm8XP_en; nice -n-10 vmplayer vm8XP_en.vmx > /dev/null 2>/dev/null}
+      [exec] (vmDroid) {cd ~/vmware/Android; nice -n-10 vmplayer Android.vmx > /dev/null 2>/dev/null}
+
+      [separator]
+
+[submenu] (Apps)
+      [exec] (X-CD-Roast) {xcdroast -n}
+      [exec] (Gimp) {gimp}
+      [exec] (Cinelerra) {cinelerra}
+      [exec] (Audacity) {audacity}
+      [exec] (RipperX) {ripperX}
+      [exec] (VMware) {vmware}
+[end]
+
+[submenu] (Hack)
+      [exec] (PuTTY) {putty}
+      [exec] (PonyProg) {ponyprog2000}
+      [exec] (MPLab) {MPLab}
+      [exec] (Glade) {glade-2}
+      [exec] (KDevelop) {kdevelop}
+[end]
+
+[submenu] (Mount)
+      [exec] (Mount CDROM) {mount /mnt/cdrom}
+      [exec] (Mount USB) {mount /mnt/usb}
+      [exec] (Umount CDROM) {eject /mnt/cdrom}
+      [exec] (Umount USB) {umount /mnt/usb}
+[end]
+
+[submenu] (MMedia)
+      [exec] (MPlayer) {gmplayer}
+      [exec] (XMMS) {xmms}
+      [exec] (aumix) {aumix}
+      [exec] (WorkBone) {aterm -C -title WorkBone +ut -geometry 70x14 +sb -fn -misc-fixed-bold-*-*-*-14-*-*-*-*-*-iso8859-2 -ls -sl 300 -fg green -tr -sh 50 -e workbone -a}
+      [exec] (alsamixer) {aterm -C -title Alsamixer +ut -geometry 150x30 +sb -fn -misc-fixed-bold-*-*-*-14-*-*-*-*-*-iso8859-2 -ls -sl 300 -fg green -tr -sh 50 -e alsamixer}
+      [exec] (BpmDj) {kbpm-dj}
+[end]
+
+[submenu] (Office)
+      [exec] (OpenOffice) {soffice}
+      [exec] (xcalc) {xcalc}
+      [exec] (xpdf) {xpdf}
+      [exec] (gv) {gv}
+      [exec] (kwrite) {kwrite}
+      [exec] (kWord) {kword}
+      [exec] (kcalc) {kcalc}
+[end]
+
+[submenu] (Adm)
+      [exec] (XKill) {xkill}
+      [exec] (rootshell) {aterm -C -title Aterm +ut -geometry 140x30 +sb -fn -misc-fixed-bold-*-*-*-14-*-*-*-*-*-iso8859-2 -ls -sl 300 -fg green -tr -sh 50 -e su}
+      [exec] (GW shell) {aterm -C -title Aterm +ut -geometry 140x30 +sb -fn -misc-fixed-bold-*-*-*-14-*-*-*-*-*-iso8859-2 -ls -sl 300 -fg green -tr -sh 50 -e ssh root@kelenfold -p 60000}
+      [exec] (xscreensaver) {xscreensaver-demo}
+      [exec] (xlock) {xlock}
+      [exec] (Reload .Xdefaults) {xrdb -load /home/m/.Xdefaults}
+      [exec] (Sleep) {Sleep}
+      [exec] (reboot) {reboot}
+      [exec] (halt) {halt}
+[end]
+
+[submenu] (fluxbox menu)
+      [config] (Configure)
+[submenu] (System Styles) {Choose a style...}
+      [stylesdir] (/usr/X11R6/share/fluxbox/styles)
+[end]
+[submenu] (User Styles) {Choose a style...}
+      [stylesdir] (~/.fluxbox/styles)
+[end]
+[submenu] (Backgrounds) {Set the Background}
+      [exec] (Random Background) {fbsetbg -r /home/m/.fluxbox/backgrounds}
+      [exec] (BG) {fbsetbg -a "/home/m/.fluxbox/backgrounds/BG.jpg" }
+      [exec] (KisP) {fbsetbg -a "/home/m/.fluxbox/backgrounds/KisP.jpg" }
+      [exec] (memoryBG) {fbsetbg -a "/home/m/.fluxbox/backgrounds/memoryBG.jpg" }
+[end]
+      [workspaces] (Workspace List)
+[submenu] (Tools)
+      [exec] (Window name) {xprop WM_CLASS|cut -d \" -f 2|xmessage -file - -center}
+      [exec] (Screenshot - JPG) {import screenshot.jpg && display screenshot.jpg}
+      [exec] (Screenshot - PNG) {import screenshot.png && display screenshot.png}
+      [exec] (Regen Menu) {fluxbox-generate_menu}
+[end]
+[submenu] (Window Managers)
+      [restart] (kde) {startkde}
+      [restart] (fvwm) {fvwm}
+      [restart] (windowmaker) {wmaker}
+[end]
+      [exec] (Lock screen) {xlock}
+      [commanddialog] (Fluxbox Command)
+      [reconfig] (Reload config)
+      [restart] (Restart)
+      [exec] (About) {(fluxbox -v; fluxbox -info | sed 1d) 2> /dev/null | xmessage -file - -center}
+      [separator]
+      [exit] (Exit)
+[end]
+[end]

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+modprobe rfkill
+modprobe bluetooth
+modprobe l2cap
+modprobe rfcomm
+modprobe btusb
+modprobe bnep
+
+BT=`/usr/sbin/rfkill list | grep hci0 - | cut -b 1 -`
+if [ -z "$BT" ]; then
+  echo "error: bluetooth adapter is missing or switched off" 1>&2
+  exit 1
+fi
+/usr/sbin/rfkill unblock $BT
+
+/etc/init.d/dbus start
+/etc/init.d/bluetooth start
+sudo -u tm196 blueman-applet > /var/log/blueman-session  2>>/var/log/blueman-session &

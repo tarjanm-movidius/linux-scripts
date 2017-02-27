@@ -1,0 +1,66 @@
+#!/bin/sh
+
+mkdir /var/lock/hiber || exit 0
+test -f /var/lock/acpisleep && exit 0
+
+. /etc/conf.d/netup
+. /etc/conf.d/brightness
+. /etc/conf.d/ntpclient
+NTPUPD="ntpclient -s -h $NTPSERV1"
+#/etc/init.d/ntp-client restart
+
+BRTNSS=`cat $BRTNS_DEV`
+echo 0 > $BRTNS_DEV
+
+/usr/sbin/camsw off
+/usr/sbin/chksmb -u
+#/etc/init.d/proftpd stop
+/etc/init.d/pure-ftpd stop
+
+if [ -z "`tail -n+2 /proc/swaps`" ]; then
+  swapon -a
+  REMOVE_SWAP="1"
+fi
+
+mv -f /home/m/.mozilla/firefox/ramdisk.tgz /home/m/.mozilla/firefox/ramdisk.tgz~
+tar c -C /dev/shm/firefox `ls -1 /dev/shm/firefox` | pigz > /home/m/.mozilla/firefox/ramdisk.tgz
+sync
+echo 1 > /proc/sys/vm/drop_caches
+
+# wifi
+killall dhcpcd
+killall wpa_supplicant
+ifconfig ${WLAN_IF} down
+
+# eth0 & wake-on-lan
+ifconfig ${LAN_IF} down
+ethtool -s ${LAN_IF} wol g
+/sbin/hwclock --systohc
+
+# suspend
+echo -n shutdown > /sys/power/disk
+echo -n disk > /sys/power/state
+
+###########################################################
+
+# resume
+/usr/sbin/accel1m
+sleep 1
+sleep 1
+sleep 1
+echo $BRTNSS > $BRTNS_DEV
+
+if /usr/sbin/netup > /dev/null; then
+  $NTPUPD
+else
+  sleep 2
+  if /usr/sbin/netup > /dev/null; then $NTPUPD; fi
+fi
+
+nevnap
+
+if [ -n "$REMOVE_SWAP" ]; then
+  swapoff -a &
+fi
+
+rmdir /var/lock/hiber

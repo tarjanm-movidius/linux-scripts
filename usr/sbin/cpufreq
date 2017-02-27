@@ -1,0 +1,73 @@
+#!/bin/sh
+
+[ -z "${CPUFREQCONF}" ] && CPUFREQCONF="/etc/conf.d/cpufreq.conf"
+. ${CPUFREQCONF}
+
+cf_start() {
+
+if test -n "$1"; then
+  scaling_governor=$1
+else
+  scaling_governor=${default_governor}
+fi
+
+if test "$modprobe" == "1"; then
+  modprobe cpufreq_${scaling_governor}
+fi
+
+if test -n "${scaling_governor}"; then
+  if grep -qw ${scaling_governor} ${CPU_dir}/cpu0/cpufreq/scaling_available_governors; then
+  for i in ${CPU_dir}/cpu[0-9]; do
+    echo -n ${scaling_governor} > ${i}/cpufreq/scaling_governor
+  done
+  else
+    echo "ERROR: ${scaling_governor} governor isn't available"
+    exit 1
+  fi
+else
+  echo "ERROR: No governors given"
+  exit 1
+fi
+
+echo " * Starting CPUfreq: Adjusting CPU frequency scaling parameters"
+echo "   ${scaling_governor} governor selected"
+
+cd ${CPU_dir}/cpufreq/${scaling_governor}
+for i in *; do
+  val="`grep -w ${i} ${CPUFREQCONF} | cut -d '=' -f 2- -`"
+  if [ -n "${val}" ]; then
+    echo -n "${val}" > ${i}
+    echo "   ${i}=${val}"
+  fi
+done
+for i in /sys/devices/system/cpu/cpu0/cpuidle/state*; do
+  echo -n 1 > ${i}/disable
+done
+
+}
+
+cf_stop() {
+scaling_governor=`cat ${CPU_dir}/cpu0/cpufreq/scaling_governor`
+for i in ${CPU_dir}/cpu[0-9]; do
+  echo performance > ${i}/cpufreq/scaling_governor
+done
+for i in /sys/devices/system/cpu/cpu0/cpuidle/state*; do
+  echo -n 0 > ${i}/disable
+done
+echo "CPU frequency scaling stopped; performance governor selected"
+
+if test "${modprobe}" = "1"; then
+  rmmod cpufreq_${scaling_governor}
+fi
+}
+
+case "$1" in
+'start')
+  cf_start $2
+  ;;
+'stop')
+  cf_stop
+  ;;
+*)
+  echo "Usage:	`basename $0` <start|stop> [governor]"
+esac

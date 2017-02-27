@@ -1,0 +1,38 @@
+#!/bin/sh
+
+SYSDIR=/sys/devices/pci0000:00/
+IDVENDOR=04f2
+IDPRODUCT=b307
+
+case "$1" in
+'on')
+  ;;
+'off')
+  ;;
+*)
+  echo "Usage: `basename $0` <on|off>"
+  exit 1
+esac
+
+
+IFS='
+'
+
+for i in `find ${SYSDIR} -name bConfigurationValue`; do
+
+  CURR_DIR=`dirname $i`
+  if [ "`cat ${CURR_DIR}/idProduct`" = "${IDPRODUCT}" -a "`cat ${CURR_DIR}/idVendor`" = "${IDVENDOR}" ]; then
+
+    if [ "$1" = "off" ]; then
+      echo -n "Dis"
+      echo -ne 0 > ${CURR_DIR}/bConfigurationValue
+    else
+      echo -n "En"
+      echo -ne 1 > ${CURR_DIR}/bConfigurationValue
+    fi
+
+    echo "abling [`cat ${CURR_DIR}/manufacturer`] `cat ${CURR_DIR}/product`"
+
+  fi
+
+done

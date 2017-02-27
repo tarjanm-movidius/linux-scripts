@@ -54,22 +54,22 @@ fi
 while test $# -gt 0; do
   case $1 in
     *.[Mm][Pp]3)
-      echo "\$CORESET lame -p -b \$BITRATE -m \$MODE -q \$QUALITY \"$1\" \"\$TARGETPATH/$1\"" >> cvt
+      echo "lame -p -b \$BITRATE -m \$MODE -q \$QUALITY \"$1\" \"\$TARGETPATH/$1\"" >> cvt
       ;;
     *.[Ww][Mm][Aa]|*.[Oo][Gg][Gg]|*.[Mm][24][Aa]|*.[Mm][Pp]4|*.[Aa][Aa][Cc]|*.[Ff][Ll][Aa][Cc])
       echo "echo \"\";echo \"Decoding '$1'...\"" >> cvt
-      echo "\$CORESET mplayer -af resample=44100:0:2 -vo null -vc null -ao pcm:fast \"$1\" > /dev/null" >> cvt
-      echo "\$CORESET lame -p -b \$BITRATE -m \$MODE -q \$QUALITY audiodump.wav \"\$TARGETPATH/$1.mp3\"" | rev | cut -d '.' -f 1,3- - | rev >> cvt
+      echo "mplayer -af resample=44100:0:2 -vo null -vc null -ao pcm:fast \"$1\" > /dev/null" >> cvt
+      echo "lame -p -b \$BITRATE -m \$MODE -q \$QUALITY audiodump.wav \"\$TARGETPATH/$1.mp3\"" | rev | cut -d '.' -f 1,3- - | rev >> cvt
       echo "rm -f audiodump.wav > /dev/null 2>&1" >> cvt
       ;;
     *.[Mm][Pp][Cc])
       echo "echo \"\";echo \"Decoding '$1'...\"" >> cvt
       if [ -n "`which mppdec`" ]; then
-        echo "\$CORESET mppdec \"$1\" audiodump.wav > /dev/null" >> cvt
+        echo "mppdec \"$1\" audiodump.wav > /dev/null" >> cvt
       else
-        echo "\$CORESET mplayer -af resample=44100:0:2 -vo null -vc null -ao pcm \"$1\" > /dev/null" >> cvt
+        echo "mplayer -af resample=44100:0:2 -vo null -vc null -ao pcm \"$1\" > /dev/null" >> cvt
       fi
-      echo "\$CORESET lame -p -b \$BITRATE -m \$MODE -q \$QUALITY audiodump.wav \"\$TARGETPATH/$1.mp3\"" | rev | cut -d '.' -f 1,3- - | rev >> cvt
+      echo "lame -p -b \$BITRATE -m \$MODE -q \$QUALITY audiodump.wav \"\$TARGETPATH/$1.mp3\"" | rev | cut -d '.' -f 1,3- - | rev >> cvt
       echo "rm -f audiodump.wav > /dev/null 2>&1" >> cvt
       ;;
     *)

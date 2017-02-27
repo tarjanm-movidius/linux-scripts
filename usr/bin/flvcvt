@@ -9,9 +9,9 @@ while [ $# -gt 0 ]; do
   VIDEO_NAME="$1"
   WAV_NAME=`echo "$VIDEO_NAME" | rev | cut -d '.' -f 2- - | rev`
   MP3_NAME=`echo "$WAV_NAME.mp3"`
-  WAV_NAME=`echo "$WAV_NAME.wav"`
-  $CORESET mplayer -novideo -vo null -vc null -ao pcm:file="$WAV_NAME" "$VIDEO_NAME"
-  $CORESET lame -m j -q 1 -b $BITRATE "$WAV_NAME" "$MP3_NAME"
+  WAV_NAME=/dev/shm/tmp/`basename "$WAV_NAME.wav"`
+  mplayer -novideo -vo null -vc null -ao pcm:file="$WAV_NAME" "$VIDEO_NAME"
+  lame -m j -q 1 -b $BITRATE "$WAV_NAME" "$MP3_NAME"
   rm -v "$WAV_NAME"
   shift
 done

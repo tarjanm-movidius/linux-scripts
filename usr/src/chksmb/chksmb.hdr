@@ -1,0 +1,8 @@
+#!/bin/sh
+
+export SELF=`basename $0`
+export PARMS="$@"
+tail -n+9 $0 | gunzip | sh
+unset SELF
+unset PARMS
+exit

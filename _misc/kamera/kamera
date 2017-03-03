@@ -1,0 +1,58 @@
+#!/bin/sh
+
+CAMERA_DIR="/mnt/hd/kamera"
+CAMERA_USER="kamera"
+
+camera_cron()
+{
+START=$1
+STOP=$2
+  if [ $START = $STOP ]; then
+      /usr/bin/crontab -d $CAMERA_USER
+  else
+      echo -e "0 $START * * * /usr/bin/kamera start cron > $CAMERA_DIR/log 2>&1\n0 $STOP * * * /usr/bin/kamera stop cron > $CAMERA_DIR/log 2>&1\n" | /usr/bin/crontab - -u $CAMERA_USER
+  fi
+  exit 0
+}
+
+camera_start()
+{
+  if [ "$2" = "cron" ]; then
+    echo 1 > /tmp/camera.cron
+  else
+    rm -f /tmp/camera.cron
+  fi
+
+  while ffmpeg -timestamp `date +%T` -s 352x288 -f video4linux -r 12 \
+    -vhook '/usr/local/lib/vhook/imlib2.so -c white -F /usr/local/share/mplayer/font/DejaVuSans.ttf/12 -x 0 -y 0 -t %A-%D-%T' \
+    -i /dev/video0 -fs 700000000 $CAMERA_DIR/`date +%F_%H%M`.avi
+#    -vhook '/usr/local/lib/vhook/imlib2.so -x 0 -y 0 -i black-260x20.png' \
+  do
+    echo "700MB reached, restarting"
+  done
+}
+
+camera_stop()
+{
+  if [ ! -e /tmp/camera.cron -a "$2" = "cron" ]; then
+    exit 1
+  fi
+  rm -f /tmp/camera.cron
+  skill TERM ffmpeg
+}
+
+case "$1" in
+'start')
+  camera_start $@
+  ;;
+'stop')
+  camera_stop $@
+  ;;
+*)
+  if expr $1 + 0 >/dev/null 2>&1; then
+    if expr $2 + 0 >/dev/null 2>&1; then
+      camera_cron $1 $2
+    fi
+  fi
+  echo "usage $0 start | stop | start_time end_time"
+esac

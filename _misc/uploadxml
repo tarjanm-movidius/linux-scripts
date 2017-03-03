@@ -1,0 +1,7 @@
+#!/bin/sh
+
+OKFILE=`echo "$1" | sed "s/.xml/.ok/"`
+touch "$OKFILE"
+
+lftp -u aes,aesquality -e "put $1 $OKFILE; exit" ftp://10.190.69.161
+rm "$OKFILE"

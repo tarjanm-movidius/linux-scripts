@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set $@
+while [ $# -gt 0 ]; do
+  N=`cut -b 5-6 <<< $1`
+  N2=`expr $N '*' 2 + 1`
+  echo "N = $N   N2 = $N2"
+  mv $1 scan${N2}.tif
+  shift
+done

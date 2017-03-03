@@ -1,0 +1,14 @@
+#!/bin/sh
+
+CDREC="/usr/bin/cdrecord -v -dev=/dev/cdrw -driveropts=burnfree"
+MKISOFS="/usr/bin/mkisofs -J"
+#FILELIST="`ls -Q1 $@ | tr '\n' ' '`"
+
+#echo $FILELIST
+#exit
+$MKISOFS $@ | $CDREC -waiti -multi -tao -eject speed=16 -
+if [ $? == 254 ]; then
+    $CDREC blank=fast speed=4
+    $MKISOFS $@ | $CDREC -waiti -multi -tao -eject speed=4 -
+fi
+

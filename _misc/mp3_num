@@ -1,0 +1,12 @@
+#!/bin/sh
+
+for i in *3; do
+  NUM=$(id3info "$i" | grep TRCK | cut -d ':' -f 2 | tr -d ' ')
+  if [ $NUM -lt 10 ]; then NUM="0$NUM"; fi
+  if [ -n "$1" ]; then
+    NNAME=$(sed "s/$1/$NUM/" <<< "$i")
+  else
+    NNAME="$NUM - $i"
+  fi
+  mv "$i" "$NNAME"
+done

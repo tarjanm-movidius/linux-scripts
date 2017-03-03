@@ -1,0 +1,3 @@
+#!/bin/sh
+
+find mp3/ -iname "*.mp3" -printf "%p\n/mnt/sda1/tmp-zik/%f\n" | parallel -n2 -j+0 lame -S -q1 --vbr-new -V6 -b 32 -B128

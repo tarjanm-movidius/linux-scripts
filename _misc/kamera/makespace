@@ -1,0 +1,7 @@
+#!/bin/sh
+
+CAMERA_DIR="/mnt/hd/kamera"
+
+if [ `df -k | grep hda1 - | tr -s ' ' | cut -d ' ' -f 4 -` -lt 700000 ]; then
+  rm "$CAMERA_DIR/`ls -rt1 $CAMERA_DIR | tr '\n' ' ' | cut -d ' ' -f 1 -`"
+fi

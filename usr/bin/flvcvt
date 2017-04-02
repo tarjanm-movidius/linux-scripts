@@ -13,7 +13,6 @@ while [ $# -gt 0 ]; do
   WAV_NAME=/dev/shm/tmp/`basename "$WAV_NAME.wav"`
   mplayer -novideo -vo null -vc null -ao pcm:file="$WAV_NAME" "$VIDEO_NAME"
   ( lame --nohist -m j -q 1 -b $BITRATE "$WAV_NAME" "$MP3_NAME"; rm -v "$WAV_NAME" ) &
-  sleep 0.3
   # ffmpeg -threads 4 -i "$VIDEO_NAME" -ab ${BITRATE}000 "$MP3_NAME"
   shift
 done

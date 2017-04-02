@@ -16,4 +16,4 @@ fi
 
 /etc/init.d/dbus start
 /etc/init.d/bluetooth start
-sudo -u tm196 blueman-applet > /var/log/blueman-session  2>>/var/log/blueman-session &
+sudo -u m blueman-applet > /var/log/blueman-session  2>>/var/log/blueman-session &

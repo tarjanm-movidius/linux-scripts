@@ -24,7 +24,7 @@ done
 
 exit
 echo -n "chmod'ing movies & MP3s ... "
-cd /home/tm196
+cd /home/m
 /bin/chmod -R +t MP3
 /bin/chmod -R a+r MP3 movies
 /bin/chmod -R ug+rw MP3 movies

@@ -7,15 +7,14 @@ if [ "$1" = "-192" ]; then BITRATE="192"; shift; fi
 
 while [ $# -gt 0 ]; do
   while [ `ps x | grep -c [l]ame` -ge 4 ]; do sleep 0.3; done
-  [ -n "$WAV_NAME" ] && rm -v "$WAV_NAME"
   VIDEO_NAME="$1"
   WAV_NAME=`echo "$VIDEO_NAME" | rev | cut -d '.' -f 2- - | rev`
   MP3_NAME=`echo "$WAV_NAME.mp3"`
   WAV_NAME=/dev/shm/tmp/`basename "$WAV_NAME.wav"`
   mplayer -novideo -vo null -vc null -ao pcm:file="$WAV_NAME" "$VIDEO_NAME"
-  lame --nohist -m j -q 1 -b $BITRATE "$WAV_NAME" "$MP3_NAME" &
+  ( lame --nohist -m j -q 1 -b $BITRATE "$WAV_NAME" "$MP3_NAME"; rm -v "$WAV_NAME" ) &
   sleep 0.3
   # ffmpeg -threads 4 -i "$VIDEO_NAME" -ab ${BITRATE}000 "$MP3_NAME"
   shift
 done
-[ -n "$WAV_NAME" ] && rm -v "$WAV_NAME"
+while [ `ps x | grep -c [l]ame` -ge 0 ]; do sleep 1; done

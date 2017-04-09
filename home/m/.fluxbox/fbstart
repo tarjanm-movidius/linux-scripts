@@ -15,7 +15,7 @@ nice wmbatteries >/dev/null 2>/dev/null &
 nice ascpu -withdrawn -bg "#000000" -user "#546920" -sys "#803304" -nice "#166883" > /dev/null 2>/dev/null &
 #rm -f $HOME/.mozilla/firefox/*default/sessionstore.js > /dev/null 2>&1
 #aterm -C -title Aterm1 +ut +sb -fn -misc-fixed-bold-*-*-*-14-*-*-*-*-*-iso8859-2 -ls -sl 300 -fg green -tr -sh 50 &
-urxvt -C -title Aterm1 -e alsamixer &
+urxvt -C -title AlsaMixer -e alsamixer &
 firefox &
 sleep ${DELAY}
 #aterm -C -title MC +ut +sb -fn -misc-fixed-bold-*-*-*-14-*-*-*-*-*-iso8859-2 -ls -sl 300 -fg green -tr -sh 50 -e mc &

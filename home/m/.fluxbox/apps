@@ -1,5 +1,5 @@
 [startup]  {~/.fluxbox/fbstart}
-[app] (title=Aterm1)
+[app] (title=AlsaMixer)
   [Workspace]	{0}
   [Dimensions]	{634 586}
   [Position]	(UPPERLEFT)	{0 0}

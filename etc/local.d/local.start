@@ -53,4 +53,4 @@ if [ -x /etc/conf.d/cpufreq -a -z "`ps ax | grep [a]ccel1m`" ]; then
   /etc/conf.d/cpufreq start
 fi
 
-sudo -u m screen -S mldonkey -d -m mlnet
+sudo -u m screen -S mldonkey -d -m nice mlnet

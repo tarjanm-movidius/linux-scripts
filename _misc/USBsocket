@@ -1,0 +1,25 @@
+#!/bin/bash
+
+LOG="/var/log/`basename $0`.log"
+
+if [ -f /etc/conf.d/USBsocket ]; then
+    . /etc/conf.d/USBsocket
+else
+	SDEV=/dev/ttyUSB0
+	INITDLY=2
+fi
+DLY=$INITDLY
+
+while true; do
+	date >> "$LOG"
+	if [ -e $SDEV ]; then
+		nc -vl $LPORT < $SDEV > $SDEV 2>>"$LOG"
+		DLY=$INITDLY
+	else
+		echo "Error: $SDEV not found" >> "$LOG"
+		sleep $DLY
+		if [ $DLY -lt 256 ]; then
+			DLY=`expr $DLY '*' 2`
+		fi
+	fi
+done

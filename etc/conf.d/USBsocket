@@ -1,0 +1,3 @@
+LPORT=5025
+SDEV=/dev/ttyUSB0
+INITDLY=2   # Initial delay between retries, increases by powers of 2 when unsuccessful

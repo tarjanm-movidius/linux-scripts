@@ -7,6 +7,7 @@
 
 HDR="boot_bin"
 [ $# -gt 1 ] && HDR="$2"
+echo "$HDR" | grep -q '\W' && echo "Invalid array_name \"$HDR\"" && exit 2
 [ -e "$HDR.h" ] && mv -v "$HDR.h" "$HDR.h~"
 
 echo "const unsigned char $HDR[] = { \\" > "$HDR.h"

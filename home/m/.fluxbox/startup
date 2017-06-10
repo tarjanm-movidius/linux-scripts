@@ -44,7 +44,7 @@
 
 if /usr/bin/3dsw test; then
   /usr/bin/3ddeskd --wm=fluxbox
-  nice /usr/bin/xscreensaver -nosplash &
+#  nice /usr/bin/xscreensaver -nosplash &
 fi
 
 # if [ -e $HOME/.Xresources ]; then

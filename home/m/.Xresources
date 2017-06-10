@@ -13,3 +13,4 @@ urxvt*shading: 20
 urxvt.searchable-scrollback: CM-s
 urxvt*foreground: #00C300
 urxvt*scrollBar: 0
+urxvt*utmpInhibit: 0

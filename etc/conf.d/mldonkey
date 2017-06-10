@@ -6,11 +6,11 @@
 # invalid data yet!
 
 # owner of mlnet process (don't change, must be existing)
-USER="p2p"
+USER="m"
 
 # mldonkey's working dir (must be existing)
-MLDONKEY_DIR="/.mldonkey"
-#MLDONKEY_DIR="/mnt/hd/.mldonkey"
+#MLDONKEY_DIR="/.mldonkey"
+MLDONKEY_DIR="/mnt/hd/.mldonkey"
 
 # logfile (/dev/null for nowhere)
 LOG="/var/log/mldonkey.log"

@@ -24,17 +24,16 @@ rm -f /root/.xauth*
 #  echo " * Error starting X: video driver module not found"
 #fi
 
-mkdir -p /dev/shm/firefox/
+mkdir -p /dev/shm/firefox/ /dev/shm/tmp/
 chown m:users /dev/shm/firefox/
-mkdir /dev/shm/tmp/
 chmod 1777 /dev/shm/tmp/
-unpigz < /home/m/.mozilla/firefox/ramdisk.tgz | tar x -C /dev/shm/firefox/
+unpigz < /home/m/.mozilla/firefox/ramdisk.tgz | tar x -C /dev/shm/firefox/ &
 
 if [ -x /usr/sbin/netup ]; then
   /usr/sbin/netup
 fi
 
-/etc/init.d/numlock restart
+/etc/init.d/numlock start
 
 if ping -qc1t1w1 ${NTPSERV1} > /dev/null || ping -qc1t1w1 ${NTPSERV2} > /dev/null; then
   if ! ntpclient -s -h ${NTPSERV1}; then ntpclient -s -h ${NTPSERV2}; fi

@@ -5,6 +5,7 @@ LOG="/var/log/`basename $0`.log"
 if [ -f /etc/conf.d/USBsocket ]; then
     . /etc/conf.d/USBsocket
 else
+	LPORT=5025
 	SDEV=/dev/ttyUSB0
 	INITDLY=2
 fi

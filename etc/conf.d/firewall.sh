@@ -9,7 +9,7 @@ TCP_IN_PORTS="60000,137,138,139,445"
 UDP_IN_PORTS="0"
 #FTP_PORTS="20,21,113"
 FTP_PORTS="21"
-NET_ETH="192.168.1.0/24"
+NET_ETH="192.168.100.0/24"
 
 #URAL="152.66.130.2"
 
@@ -20,7 +20,7 @@ NET_ETH="192.168.1.0/24"
 
 ipt_start() {
 
-# lancok uritese, szamlalok nullazasa
+# Flushing chains, zeroing counters
 
     $IPT -F INPUT;
     $IPT -F FORWARD;
@@ -45,7 +45,7 @@ ipt_start() {
     $IPT -A INPUT -m state --state INVALID -j DROP;
     $IPT -A INPUT -p tcp ! --syn -m state --state NEW -j DROP;
 
-# Synflood ellen
+# Against synflood
 
     $IPT -N SYNFLOOD;
     $IPT -A INPUT -p tcp --syn -j SYNFLOOD;
@@ -53,30 +53,30 @@ ipt_start() {
     $IPT -A SYNFLOOD -j LOG --log-level info --log-prefix SYNFLOOD: ;
     $IPT -A SYNFLOOD -j DROP;
 
-# Floodping ellen
+# Against floodping
 
     $IPT -A INPUT -p icmp --icmp-type echo-request -m limit --limit 1/s --limit-burst 10 -j ACCEPT;
     $IPT -A INPUT -p icmp --icmp-type echo-reply -m limit --limit 1/s --limit-burst 10 -j ACCEPT;
     $IPT -A INPUT -p icmp -j DROP;
 
-# Loopback / tunnel IF-ek
+# Loopback / tunnel IFs
 
     $IPT -A INPUT -i lo -s 127.0.0.1 -j ACCEPT;
 #    $IPT -A INPUT -i tap+ -j ACCEPT;
 
-# Bejovo forgalom, IF-enkent es protokollonkent
+# Incoming traffic, per ports and IF
 
     $IPT -A INPUT -i $IF_ETH -p tcp -m multiport --dports $TCP_IN_PORTS -m state --state NEW -j ACCEPT;
     $IPT -A INPUT -i $IF_ETH -p udp -m multiport --dports $UDP_IN_PORTS -m state --state NEW -j ACCEPT;
     $IPT -A INPUT -i $IF_WLAN -p tcp -m multiport --dports $TCP_IN_PORTS -m state --state NEW -j ACCEPT;
     $IPT -A INPUT -i $IF_WLAN -p udp -m multiport --dports $UDP_IN_PORTS -m state --state NEW -j ACCEPT;
 
-# Ha az ftp-t be akarod engedni a vezetekesen
-#
+# Letting ftp in through the wired IF
+
     $IPT -A INPUT -i $IF_ETH -p tcp -m multiport --dports $FTP_PORTS -m state --state NEW -j ACCEPT;
     $IPT -A INPUT -i $IF_ETH -p udp -m multiport --dports $FTP_PORTS -m state --state NEW -j ACCEPT;
 
-# Ha csak bizonyos IP-rol (portonkent, IP-nkent :S)
+# Opening ports from certain IPs
 #
 #    $IPT -A INPUT -i $IF_ETH -p tcp -s $URAL --dport 20 -m state --state NEW -j ACCEPT;
 #    $IPT -A INPUT -i $IF_ETH -p tcp -s $URAL --dport 21 -m state --state NEW -j ACCEPT;
@@ -111,7 +111,7 @@ ipt_start() {
  $IPT -A FORWARD -i $IF_ETH -o $IF_WLAN -j ACCEPT;
 # $IPT -A FORWARD -s $NET_ETH -o $IF_WLAN -j ACCEPT;
 
-# A tobbi loggolva a lecsoba
+# The rest logged/dropped
 
     $IPT -A INPUT -j LOG --log-level info --log-prefix REJECT: ;
 

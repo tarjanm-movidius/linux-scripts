@@ -47,7 +47,6 @@ echo -n disk > /sys/power/state
 /usr/sbin/accel1m
 sleep 1
 sleep 1
-sleep 1
 echo $BRTNSS > $BRTNS_DEV
 
 if /usr/sbin/netup > /dev/null; then

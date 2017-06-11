@@ -1,7 +1,7 @@
 #!/bin/sh
 
-LASTLINE=$((`grep -c '$' installer.sh` + 1))
 DIR=$(cd `dirname $0`; pwd)
+LASTLINE=$((`grep -c '$' installer.sh` + 1))
 
 cd ..
 rm -vf opt/*.py[co] `find usr/lib/python* -name *.py[co]`

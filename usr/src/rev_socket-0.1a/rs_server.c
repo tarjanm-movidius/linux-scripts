@@ -66,7 +66,8 @@ char send_buf[BUF_SIZE];
 		// Preparing data for select()
 		FD_ZERO(&fds);
 		FD_ZERO(&wfds);
-		FD_SET(clnt_lsock, &fds); s = clnt_lsock;
+		FD_SET(clnt_lsock, &fds);
+		s = clnt_lsock;
 		if (state != RS_ST_WT_PORTACK)
 		{
 			FD_SET(mdbg_lsock, &fds);

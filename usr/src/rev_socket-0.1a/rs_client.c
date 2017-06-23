@@ -192,7 +192,7 @@ char send_buf[BUF_SIZE];
 					FD_CLR(srv_sock, &fds);
 					if ((i = recv(srv_sock, recv_buf, BUF_SIZE, 0)) <= 0)
 					{
-						LOGPRINTF("  <%02d> Server disconnected while trying to connect\n", srv_sock)
+						LOGPRINTF("  <%02d> Server disconnected while trying to connect to MDBGS\n", srv_sock)
 						close(srv_sock);
 						srv_sock = 0;
 						tv.tv_sec = TV_SEC_0;

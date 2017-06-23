@@ -17,7 +17,7 @@
 
 // states
 #define RS_ST_CONNECT		0
-#define RS_ST_CLNT_WT		1
+#define RS_ST_WT_CLNT		1
 #define RS_ST_SND_LOGIN		2
 #define RS_ST_WT_LOGIN		3
 #define RS_ST_WT_PING		4

@@ -105,6 +105,7 @@ char send_buf[BUF_SIZE];
 		if (select(s+1, &fds, &wfds, NULL, &tv) < 0) DIE(EXIT_FAILURE, "select")
 		else {
 
+			tv.tv_usec = TV_USEC;
 			tv.tv_sec = TV_SEC_TICK;
 			switch (state)
 			{
@@ -126,7 +127,7 @@ char send_buf[BUF_SIZE];
 					FD_CLR(srv_sock, &fds);
 					if ((i = recv(srv_sock, recv_buf, BUF_SIZE, 0)) <= 0)
 					{
-						LOGPRINTF("  <%02d> Disconnected\n", srv_sock)
+						LOGPRINTF("  <%02d> Server disconnected\n", srv_sock)
 						close(srv_sock);
 						srv_sock = 0;
 						tv.tv_sec = TV_SEC_0;
@@ -186,6 +187,22 @@ char send_buf[BUF_SIZE];
 				}
 
 			case RS_ST_MDBGS_CONN:
+				if (FD_ISSET(srv_sock, &fds))
+				{
+					FD_CLR(srv_sock, &fds);
+					if ((i = recv(srv_sock, recv_buf, BUF_SIZE, 0)) <= 0)
+					{
+						LOGPRINTF("  <%02d> Server disconnected while trying to connect\n", srv_sock)
+						close(srv_sock);
+						srv_sock = 0;
+						tv.tv_sec = TV_SEC_0;
+						ping_ctr = RS_RETRY_INTERVAL;
+						state = RS_ST_CONNECT;
+						break;
+					} else {
+						DEBUGPRINTF("  <%02d> %d bytes of data on srv_sock\n", srv_sock, i)
+					}
+				}
 				if (chk_sock(&mdbgs_sock, &my_addr, &mdbgs_addr))
 				{
 					LOGPRINTF("  <%02d-%02d> Connected to MDBG Server\n", srv_sock, mdbgs_sock)

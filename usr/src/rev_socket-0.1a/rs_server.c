@@ -24,7 +24,7 @@ int i, s, clnt_lsock, clnt_sock = 0, mdbg_lsock, mdbg_sock = 0, clnt_len = 0, md
 fd_set fds, wfds;
 struct timeval tv;
 struct sockaddr_in clnt_addr, mdbg_addr;
-unsigned char state = RS_ST_CLNT_WT, ping_ctr = 0;
+unsigned char state = RS_ST_WT_CLNT, ping_ctr = 0;
 char recv_buf[BUF_SIZE];
 char send_buf[BUF_SIZE];
 
@@ -61,14 +61,17 @@ char send_buf[BUF_SIZE];
 
 // *** STARTING SERVICE ***
 
-	tv.tv_usec = TV_USEC;
 	while(1)
 	{
 		// Preparing data for select()
 		FD_ZERO(&fds);
 		FD_ZERO(&wfds);
 		FD_SET(clnt_lsock, &fds); s = clnt_lsock;
-		FD_SET(mdbg_lsock, &fds); if (mdbg_lsock > s) s = mdbg_lsock;
+		if (state != RS_ST_WT_PORTACK)
+		{
+			FD_SET(mdbg_lsock, &fds);
+			if (mdbg_lsock > s) s = mdbg_lsock;
+		}
 		if (clnt_sock > 0)
 		{
 			FD_SET(clnt_sock, &fds);
@@ -82,14 +85,15 @@ char send_buf[BUF_SIZE];
 			if (mdbg_sock > s) s = mdbg_sock;
 		}
 
+		tv.tv_usec = TV_USEC;
+		tv.tv_sec = TV_SEC_TICK;
 		if (select(s+1, &fds, &wfds, NULL, &tv) < 0) DIE(EXIT_FAILURE, "select")
 		else {
 
-			tv.tv_sec = TV_SEC_TICK;
 			switch (state)
 			{
 
-			case RS_ST_CLNT_WT:
+			case RS_ST_WT_CLNT:
 				if ( FD_ISSET(clnt_lsock, &fds) )	// new connection acccepted
 				{
 					FD_CLR(clnt_lsock, &fds);
@@ -112,7 +116,6 @@ char send_buf[BUF_SIZE];
 			case RS_ST_SND_LOGIN:
 				gettimeofday(&tv, NULL);
 				*((unsigned short*)send_buf) = tv.tv_usec & 0xFFFF;
-				tv.tv_usec = TV_USEC;
 				send(clnt_sock, send_buf, 2, 0);
 				DEBUGPRINTF("  <%02d> Sent login 0x%04hX\n", clnt_sock, ntohs(*((unsigned short*)send_buf)))
 				state = RS_ST_WT_LOGIN;
@@ -127,7 +130,7 @@ char send_buf[BUF_SIZE];
 						LOGPRINTF("  <%02d> Disconnected\n", clnt_sock)
 						close(clnt_sock);
 						clnt_sock = 0;
-						state = RS_ST_CLNT_WT;
+						state = RS_ST_WT_CLNT;
 						break;
 					}
 					if (i!=2 || *((unsigned short*)recv_buf)!=(*((unsigned short*)send_buf) ^ htons(RS_MAGIC)))
@@ -136,7 +139,7 @@ char send_buf[BUF_SIZE];
 						shutdown(clnt_sock, SHUT_RDWR);
 						close(clnt_sock);
 						clnt_sock = 0;
-						state = RS_ST_CLNT_WT;
+						state = RS_ST_WT_CLNT;
 						break;
 					}
 #if DEBUG > 0
@@ -162,7 +165,7 @@ char send_buf[BUF_SIZE];
 						LOGPRINTF("  <%02d> Disconnected\n", clnt_sock)
 						close(clnt_sock);
 						clnt_sock = 0;
-						state = RS_ST_CLNT_WT;
+						state = RS_ST_WT_CLNT;
 						break;
 					}
 					if (i!=2 || *((unsigned short*)recv_buf)!=0)
@@ -171,7 +174,7 @@ char send_buf[BUF_SIZE];
 						shutdown(clnt_sock, SHUT_RDWR);
 						close(clnt_sock);
 						clnt_sock = 0;
-						state = RS_ST_CLNT_WT;
+						state = RS_ST_WT_CLNT;
 						break;
 					}
 					ping_ctr = 0;
@@ -183,7 +186,7 @@ char send_buf[BUF_SIZE];
 						shutdown(clnt_sock, SHUT_RDWR);
 						close(clnt_sock);
 						clnt_sock = 0;
-						state = RS_ST_CLNT_WT;
+						state = RS_ST_WT_CLNT;
 					}
 					break;
 				}
@@ -210,7 +213,7 @@ char send_buf[BUF_SIZE];
 						LOGPRINTF("  <%02d> Client disconnected while waiting for MDBG\n", clnt_sock)
 						close(clnt_sock);
 						clnt_sock = 0;
-						state = RS_ST_CLNT_WT;
+						state = RS_ST_WT_CLNT;
 						break;
 					} else {
 						LOGPRINTF("  <%02d> %d bytes data on client socket while waiting for MDBG\n", clnt_sock, i)
@@ -245,7 +248,7 @@ char send_buf[BUF_SIZE];
 						close(mdbg_sock);
 						mdbg_sock = 0;
 */
-						state = RS_ST_CLNT_WT;
+						state = RS_ST_WT_CLNT;
 						break;
 					}
 					if (i!=2 || *((unsigned short*)recv_buf)==0)
@@ -334,7 +337,7 @@ char send_buf[BUF_SIZE];
 				mdbg_sock = 0;
 				clnt_sock = 0;
 				clnt_len = mdbg_len = 0;
-				state = RS_ST_CLNT_WT;
+				state = RS_ST_WT_CLNT;
 			break;
 
 			}	// switch (state)

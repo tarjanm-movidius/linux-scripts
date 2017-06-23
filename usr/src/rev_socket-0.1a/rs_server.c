@@ -110,7 +110,7 @@ char send_buf[BUF_SIZE];
 						break;
 					}
 					fcntl(clnt_sock, F_SETFL, fcntl(clnt_sock, F_GETFL) | O_NONBLOCK);
-					DEBUGPRINTF("New connection accepted on socket: %02d\n", clnt_sock)
+					DEBUGPRINTF("New connection accepted on socket %02d\n", clnt_sock)
 					state = RS_ST_SND_LOGIN;
 				} else break;
 
@@ -128,7 +128,7 @@ char send_buf[BUF_SIZE];
 					FD_CLR(clnt_sock, &fds);
 					if ((i = recv(clnt_sock, recv_buf, BUF_SIZE, 0)) <= 0)
 					{
-						LOGPRINTF("  <%02d> Disconnected\n", clnt_sock)
+						LOGPRINTF("  <%02d> Client disconnected\n", clnt_sock)
 						close(clnt_sock);
 						clnt_sock = 0;
 						state = RS_ST_WT_CLNT;
@@ -146,7 +146,7 @@ char send_buf[BUF_SIZE];
 #if DEBUG > 0
 					LOGPRINTF("  <%02d> Logged in\n", clnt_sock)
 #else
-					LOGPRINTF("New connection accepted on socket: %02d\n", clnt_sock)
+					LOGPRINTF("New connection accepted on socket %02d\n", clnt_sock)
 #endif
 					state = RS_ST_PING;
 				} else break;
@@ -163,7 +163,7 @@ char send_buf[BUF_SIZE];
 					FD_CLR(clnt_sock, &fds);
 					if ((i = recv(clnt_sock, recv_buf, BUF_SIZE, 0)) <= 0)
 					{
-						LOGPRINTF("  <%02d> Disconnected\n", clnt_sock)
+						LOGPRINTF("  <%02d> Client disconnected\n", clnt_sock)
 						close(clnt_sock);
 						clnt_sock = 0;
 						state = RS_ST_WT_CLNT;
@@ -241,33 +241,35 @@ char send_buf[BUF_SIZE];
 					FD_CLR(clnt_sock, &fds);
 					if ((i = recv(clnt_sock, recv_buf, BUF_SIZE, 0)) <= 0)
 					{
-						LOGPRINTF("  <%02d> Disconnected\n", clnt_sock)
+						LOGPRINTF("  <%02d> Client disconnected\n", clnt_sock)
 						close(clnt_sock);
 						clnt_sock = 0;
-/*
-						shutdown(mdbg_sock, SHUT_RDWR);
-						close(mdbg_sock);
-						mdbg_sock = 0;
-*/
 						state = RS_ST_WT_CLNT;
+						if ((mdbg_sock = accept( mdbg_lsock, NULL, NULL )) > 0 )
+						{
+							shutdown(mdbg_sock, SHUT_RDWR);
+							close(mdbg_sock);
+						}
+						mdbg_sock = 0;
 						break;
 					}
 					if (i!=2 || *((unsigned short*)recv_buf)==0)
 					{
 						LOGPRINTF("  <%02d> Opening port failed on client side\n", clnt_sock)
-/*
-						shutdown(clnt_sock, SHUT_RDWR);
-						close(clnt_sock);
-						clnt_sock = 0;
-*/
 						state = RS_ST_WT_MDBG;
+						if ((mdbg_sock = accept( mdbg_lsock, NULL, NULL )) > 0 )
+						{
+							shutdown(mdbg_sock, SHUT_RDWR);
+							close(mdbg_sock);
+						}
+						mdbg_sock = 0;
 						break;
 					}
 					state = RS_ST_ACCEPT_MDBG;
 				} else break;
 
 			case RS_ST_ACCEPT_MDBG:
-				if ((mdbg_sock = accept( mdbg_lsock, NULL, NULL )) < 0 )
+				if ((mdbg_sock = accept( mdbg_lsock, NULL, NULL )) <= 0 )
 				{
 					ERR("accept(mdbg)")
 					state = RS_ST_WT_MDBG;

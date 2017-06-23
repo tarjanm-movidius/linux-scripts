@@ -161,11 +161,11 @@ char send_buf[BUF_SIZE];
 					}
 					if (i==2)
 					{
+						ping_ctr = 0;
 						if (*((unsigned short*)recv_buf) == 0)
 						{
 							*((unsigned short*)send_buf) = 0;
 							send(srv_sock, send_buf, 2, 0);
-							ping_ctr = 0;
 							break;
 						} else {
 							state = RS_ST_MDBGS_CONN;
@@ -211,6 +211,13 @@ char send_buf[BUF_SIZE];
 					send(srv_sock, send_buf, 2, 0);
 					state = RS_ST_CONNECTED;
 				} else {
+					if (++ping_ctr >= RS_CONNECT_RETRIES)
+					{
+						ping_ctr = 0;
+						*((unsigned short*)send_buf) = 0;
+						send(srv_sock, send_buf, 2, 0);
+						state = RS_ST_WT_PING;
+					}
 					mdbgs_sock = 0;
 					break;
 				}

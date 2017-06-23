@@ -14,6 +14,7 @@
 #define RS_SOCKET_TO		10	// N x TV_SEC_TICK, > RS_PING_INTERVAL
 #define RS_RETRY_INTERVAL	5	// N x TV_SEC_TICK
 #define RS_PING_INTERVAL		5	// N x TV_SEC_TICK
+#define RS_CONNECT_RETRIES	5
 
 // states
 #define RS_ST_CONNECT		0

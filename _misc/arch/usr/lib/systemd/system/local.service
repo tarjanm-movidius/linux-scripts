@@ -1,0 +1,14 @@
+[Unit]
+Description=/etc/local.d
+ConditionFileIsExecutable=/etc/local.d/local.start
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh /etc/local.d/local.start
+ExecStop=/bin/sh /etc/local.d/local.stop
+TimeoutSec=0
+StandardOutput=tty
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

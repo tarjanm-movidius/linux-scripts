@@ -1,0 +1,20 @@
+# /etc/conf.d/local.start
+# This is a good place to load any misc programs
+# on startup (use &>/dev/null to hide output)
+
+#. /etc/conf.d/ntpclient
+
+#echo " * Starting firewall ..."
+#/etc/conf.d/firewall.sh start
+
+[ -e /mnt/vmShared ] || mkdir -p /mnt/vmShared
+/usr/bin/vmhgfs-fuse -o allow_other -o auto_unmount .host:/vmShared /mnt/vmShared
+
+
+#mkdir -p /dev/shm/firefox/ /dev/shm/tmp/
+mkdir -p /dev/shm/tmp/
+#chown tarjanm:users /dev/shm/firefox/
+chmod 1777 /dev/shm/tmp/
+#unpigz < /home/m/.mozilla/firefox/ramdisk.tgz | tar x -C /dev/shm/firefox/ &
+
+#sudo -u tarjanm screen -S mldonkey -d -m nice mlnet

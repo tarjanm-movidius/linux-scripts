@@ -1,0 +1,1 @@
+nice rkhunter -c --report-warnings-only --skip-keypress --syslog

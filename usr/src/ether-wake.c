@@ -380,7 +380,6 @@ static int get_wol_pw(const char *optarg)
 }
 #endif
 
-
 /*
  * Local variables:
  *  compile-command: "gcc -O -Wall -o ether-wake ether-wake.c"

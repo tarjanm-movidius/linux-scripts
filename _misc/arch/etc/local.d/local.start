@@ -8,6 +8,8 @@
 #/etc/conf.d/firewall.sh start
 
 [ -e /mnt/vmShared ] || mkdir -p /mnt/vmShared
+fsck.ext4 /dev/sdb1
+mount /dev/sdb1 /mnt/hd/
 /usr/bin/vmhgfs-fuse -o allow_other -o auto_unmount .host:/vmShared /mnt/vmShared
 
 

@@ -1,0 +1,11 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=/usr/lib64
+includedir=${prefix}/include/pulse
+
+Name: libpulse
+Description: apulse Client Interface
+Version: 5.0
+Libs: -L${libdir} -lpulse -lpthread
+Libs.private: -L${libdir}/apulse -lpulsecommon-5.0
+Cflags: -I${includedir} -D_REENTRANT

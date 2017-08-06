@@ -1,0 +1,18 @@
+#!/bin/sh
+
+mkdir /var/lock/shmtool || exit 0
+TGZFILE=/var/tmp/shm.tgz
+
+if [ "$1" == "start" ]; then
+	[ -e /dev/shm/permanent/done ] && rmdir /var/lock/shmtool && exit 0
+	mkdir -p /dev/shm/permanent/ /dev/shm/tmp/
+	chmod 1777 /dev/shm/permanent/ /dev/shm/tmp/
+	unpigz < ${TGZFILE} | tar x -C /dev/shm/permanent/
+	touch /dev/shm/permanent/done
+elif [ "$1" == "stop" -o "$1" == "save" ]; then
+	rm /dev/shm/permanent/done
+	pigz -t < ${TGZFILE} && mv ${TGZFILE} ${TGZFILE}~
+	tar c -C /dev/shm/permanent `ls -1 /dev/shm/permanent` | pigz > ${TGZFILE}
+	[ "$1" == "save" ] && touch /dev/shm/permanent/done
+fi
+rmdir /var/lock/shmtool

@@ -22,8 +22,7 @@ if [ -z "`tail -n+2 /proc/swaps`" ]; then
   REMOVE_SWAP="1"
 fi
 
-mv -f /home/m/.mozilla/firefox/ramdisk.tgz /home/m/.mozilla/firefox/ramdisk.tgz~
-tar c -C /dev/shm/firefox `ls -1 /dev/shm/firefox` | pigz > /home/m/.mozilla/firefox/ramdisk.tgz
+/sbin/shmtool save
 sync
 echo 1 > /proc/sys/vm/drop_caches
 

@@ -9,6 +9,6 @@
 . /etc/conf.d/brightness
 
 echo 0 > $BRTNS_DEV
-nc 127.0.0.1 4000 -ve "echo kill" | logger
-mv -f /home/m/.mozilla/firefox/ramdisk.tgz /home/m/.mozilla/firefox/ramdisk.tgz~
-tar c -C /dev/shm/firefox `ls -1 /dev/shm/firefox` | pigz > /home/m/.mozilla/firefox/ramdisk.tgz
+ps ax | grep -q [x]mms && sudo -u m xmms -q
+ps ax | grep -q [m]lnet && nc 127.0.0.1 4000 -ve "echo kill" | logger
+/sbin/shmtool stop

@@ -24,10 +24,7 @@ rm -f /root/.xauth*
 #  echo " * Error starting X: video driver module not found"
 #fi
 
-mkdir -p /dev/shm/firefox/ /dev/shm/tmp/
-chown m:users /dev/shm/firefox/
-chmod 1777 /dev/shm/tmp/
-unpigz < /home/m/.mozilla/firefox/ramdisk.tgz | tar x -C /dev/shm/firefox/ &
+/sbin/shmtool start
 
 if [ -x /usr/sbin/netup ]; then
   /usr/sbin/netup

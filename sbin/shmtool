@@ -7,8 +7,11 @@ if [ "$1" == "start" ]; then
 	[ -e /dev/shm/permanent/done ] && rmdir /var/lock/shmtool && exit 0
 	mkdir -p /dev/shm/permanent/ /dev/shm/tmp/
 	chmod 1777 /dev/shm/permanent/ /dev/shm/tmp/
-	unpigz < ${TGZFILE} | tar x -C /dev/shm/permanent/
-	touch /dev/shm/permanent/done
+	if ! unpigz < ${TGZFILE} | tar x -C /dev/shm/permanent/; then
+		unpigz < ${TGZFILE}~ | tar x -C /dev/shm/permanent/ || /usr/bin/logger -t $0 "Image decompression failed"
+	else
+		touch /dev/shm/permanent/done
+	fi
 elif [ "$1" == "stop" -o "$1" == "save" ]; then
 	rm /dev/shm/permanent/done
 	pigz -t < ${TGZFILE} && mv ${TGZFILE} ${TGZFILE}~

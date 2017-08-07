@@ -2,6 +2,8 @@
 
 mkdir /var/lock/shmtool || exit 1
 TGZFILE=/var/tmp/shm.tgz
+IFS='
+'
 
 if [ "$1" == "start" ]; then
 	[ -e /dev/shm/permanent/done ] && rmdir /var/lock/shmtool && exit 2

@@ -7,6 +7,7 @@ while [ $# -gt 0 ]; do
 	[ ! -e "$1" ] && echo "Error: file '$1' not found" && exit 3
 	DIR="`dirname $1`"
 	[ "$DIR" == "." ] && DIR="$PWD"
+	! grep -q '^/' <<< $DIR && DIR="$PWD/$DIR"
 	! grep -q "scripts" <<< $DIR && echo "Error: trying to install script from outside repo" && exit 4
 	install -v "$1" "`sed 's/.*scripts//' <<< $DIR`"
 	shift

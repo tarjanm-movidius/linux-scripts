@@ -12,11 +12,6 @@ fsck.ext4 /dev/sdb1
 mount /dev/sdb1 /mnt/hd/
 /usr/bin/vmhgfs-fuse -o allow_other -o auto_unmount .host:/vmShared /mnt/vmShared
 
-
-#mkdir -p /dev/shm/firefox/ /dev/shm/tmp/
-mkdir -p /dev/shm/tmp/
-#chown tarjanm:users /dev/shm/firefox/
-chmod 1777 /dev/shm/tmp/
-#unpigz < /home/m/.mozilla/firefox/ramdisk.tgz | tar x -C /dev/shm/firefox/ &
+/sbin/shmtool start
 
 #sudo -u tarjanm screen -S mldonkey -d -m nice mlnet

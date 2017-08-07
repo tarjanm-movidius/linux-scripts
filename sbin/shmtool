@@ -7,10 +7,15 @@ if [ "$1" == "start" ]; then
 	[ -e /dev/shm/permanent/done ] && rmdir /var/lock/shmtool && exit 0
 	mkdir -p /dev/shm/permanent/ /dev/shm/tmp/
 	chmod 1777 /dev/shm/permanent/ /dev/shm/tmp/
-	if ! unpigz < ${TGZFILE} | tar x -C /dev/shm/permanent/; then
-		unpigz < ${TGZFILE}~ | tar x -C /dev/shm/permanent/ || /usr/bin/logger -t $0 "Image decompression failed"
-	else
+	if unpigz < ${TGZFILE} | tar x -C /dev/shm/permanent/; then
 		touch /dev/shm/permanent/done
+	else
+		if unpigz < ${TGZFILE}~ | tar x -C /dev/shm/permanent/; then
+			/usr/bin/logger -t shmtool -p warning "Warning: backup image used"
+			touch /dev/shm/permanent/done
+		else
+			/usr/bin/logger -t shmtool -p err "Image decompression failed"
+		fi
 	fi
 elif [ "$1" == "stop" -o "$1" == "save" ]; then
 	rm /dev/shm/permanent/done

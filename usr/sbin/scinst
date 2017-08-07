@@ -2,9 +2,9 @@
 
 # Script for ease of installing scripts to their respective places from this repo
 [ -z "$1" ] && echo "Usage: scinst <script-in-repo>" && exit 1
-[ ! -e "$1" ] && echo "Error: file '$1' not found" && exit 2
-[ "`id -u`" != "0" ] && echo "Error: you need to be root to run scinst" && exit 3
+[ "`id -u`" != "0" ] && echo "Error: you need to be root to run scinst" && exit 2
 while [ $# -gt 0 ]; do
+	[ ! -e "$1" ] && echo "Error: file '$1' not found" && exit 3
 	DIR="`dirname $1`"
 	[ "$DIR" == "." ] && DIR="$PWD"
 	! grep -q "scripts" <<< $DIR && echo "Error: trying to install script from outside repo" && exit 4

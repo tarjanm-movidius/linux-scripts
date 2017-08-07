@@ -24,7 +24,7 @@ rm -f /root/.xauth*
 #  echo " * Error starting X: video driver module not found"
 #fi
 
-/sbin/shmtool start
+/sbin/shmtool start &
 
 if [ -x /usr/sbin/netup ]; then
   /usr/sbin/netup

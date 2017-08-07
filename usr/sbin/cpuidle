@@ -1,3 +1,5 @@
+[ "$1" != "0" ] && [ "$1" != "1" ] && echo "Usage: cpuidle <0|1>" && exit 1
+
 for i in /sys/devices/system/cpu/cpu0/cpuidle/state*; do
-  echo -n 1 > $i/disable
+  echo -n $1 > $i/disable
 done

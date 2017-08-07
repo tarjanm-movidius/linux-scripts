@@ -1,0 +1,8 @@
+#!/bin/sh
+
+[ -z "$1" ] && echo "Usage: scinst <script-in-repo>" && exit 1
+[ "`id -u`" != "0" ] && echo "Error: you need to be root to run scinst" && exit 2
+DIR="`dirname $1`"
+[ "$DIR" == "." ] && DIR="$PWD"
+! grep -q "scripts" <<< $DIR && echo "Error: trying to install script from outside repo" && exit 3
+install "$1" "`sed 's/.*scripts//' <<< $DIR`"

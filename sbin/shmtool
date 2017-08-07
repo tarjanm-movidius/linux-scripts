@@ -22,7 +22,7 @@ if [ "$1" == "start" ]; then
 	fi
 elif [ "$1" == "stop" -o "$1" == "save" ]; then
 	rm /dev/shm/permanent/done
-	pigz -t < ${TGZFILE} && mv ${TGZFILE} ${TGZFILE}~
+	pigz -t ${TGZFILE} && mv ${TGZFILE} ${TGZFILE}~
 	tar c -C /dev/shm/permanent `ls -1 /dev/shm/permanent` | pigz > ${TGZFILE}
 	[ "$1" == "save" ] && touch /dev/shm/permanent/done
 fi

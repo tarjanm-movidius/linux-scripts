@@ -2,7 +2,7 @@
 [begin] (-lapos-)
       [exec] (aterm) {urxvt -C}
       [exec] (mc) {urxvt -C -title MC -e mc}
-      [exec] (firefox) {firefox}
+      [exec] (firefox) {[ -e /dev/shm/permanent/done ] && firefox}
       [exec] (thunderbird) {thunderbird}
       [exec] (ptkdic) {ptkdic}
       [exec] (skype) {apulse skype}
@@ -38,11 +38,10 @@
 [end]
 
 [submenu] (MMedia)
-      [exec] (MPlayer) {gmplayer}
       [exec] (XMMS) {xmms}
-      [exec] (aumix) {aumix}
-      [exec] (WorkBone) {aterm -C -title WorkBone +ut -geometry 70x14 +sb -fn -misc-fixed-bold-*-*-*-14-*-*-*-*-*-iso8859-2 -ls -sl 300 -fg green -tr -sh 50 -e workbone -a}
-      [exec] (alsamixer) {aterm -C -title Alsamixer +ut -geometry 150x30 +sb -fn -misc-fixed-bold-*-*-*-14-*-*-*-*-*-iso8859-2 -ls -sl 300 -fg green -tr -sh 50 -e alsamixer}
+      [exec] (MPlayer) {gmplayer}
+      [exec] (alsamixer) {urxvt -C -title AlsaMixer -e alsamixer}
+      [exec] (WorkBone) {urxvt -C -title WorkBone -geometry 70x14 -e cdcd}
       [exec] (BpmDj) {kbpm-dj}
 [end]
 
@@ -58,8 +57,6 @@
 
 [submenu] (Adm)
       [exec] (XKill) {xkill}
-      [exec] (rootshell) {aterm -C -title Aterm +ut -geometry 140x30 +sb -fn -misc-fixed-bold-*-*-*-14-*-*-*-*-*-iso8859-2 -ls -sl 300 -fg green -tr -sh 50 -e su}
-      [exec] (GW shell) {aterm -C -title Aterm +ut -geometry 140x30 +sb -fn -misc-fixed-bold-*-*-*-14-*-*-*-*-*-iso8859-2 -ls -sl 300 -fg green -tr -sh 50 -e ssh root@kelenfold -p 60000}
       [exec] (xscreensaver) {xscreensaver-demo}
       [exec] (xlock) {xlock}
       [exec] (Reload .Xdefaults) {xrdb -load /home/m/.Xdefaults}

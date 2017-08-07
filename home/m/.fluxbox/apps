@@ -1,4 +1,4 @@
-[startup]  {~/.fluxbox/fbstart}
+[startup]       {~/.fluxbox/fbstart}
 [app] (title=AlsaMixer)
   [Workspace]	{0}
   [Dimensions]	{634 586}
@@ -93,8 +93,8 @@
 [end]
 [app] (name=Mail) (class=Thunderbird) (role=3pane)
   [Workspace]	{4}
-  [Dimensions]	{1145 752}
-  [Position]	(UPPERLEFT)	{0 0}
+  [Dimensions]	{84% 100%}
+  [Position]	(UPPERLEFT)	{16% 0%}
   [Deco]	{NONE}
 [end]
 [app] (name=claws-mail) (class=Claws-mail) (role=mainwindow)
@@ -113,5 +113,9 @@
 [end]
 [app] (name=urxvt) (class=URxvt)
   [Dimensions]	{53% 74%}
-  [Close]	{yes}
+[end]
+[app] (name=skypeforlinux) (class=skypeforlinux) (role=browser-window)
+  [Workspace]	{4}
+  [Position]	(UPPERLEFT)	{0% 0%}
+  [Jump]	{yes}
 [end]

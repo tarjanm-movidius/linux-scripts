@@ -13,7 +13,7 @@ if [ "$1" == "start" ]; then
 		touch /dev/shm/permanent/done
 	else
 		if unpigz < ${TGZFILE}~ | tar x --overwrite -C /dev/shm/permanent/; then
-			/usr/bin/logger -t shmtool -p warning "Warning: backup image used"
+			/usr/bin/logger -t shmtool -p warning "Warning: backup image restored"
 			touch /dev/shm/permanent/done
 		else
 			/usr/bin/logger -t shmtool -p err "Image decompression failed"

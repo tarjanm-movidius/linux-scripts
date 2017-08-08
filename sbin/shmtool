@@ -23,7 +23,7 @@ if [ "$1" == "start" ]; then
 elif [ "$1" == "stop" -o "$1" == "save" ]; then
 	rm /dev/shm/permanent/done
 	pigz -t ${TGZFILE} && mv ${TGZFILE} ${TGZFILE}~
-	tar c -C /dev/shm/permanent `ls -1 /dev/shm/permanent` | pigz > ${TGZFILE}
+	tar c -C /dev/shm/permanent `ls -A1 /dev/shm/permanent` | pigz > ${TGZFILE}
 	[ "$1" == "save" ] && touch /dev/shm/permanent/done
 fi
 rmdir /var/lock/shmtool

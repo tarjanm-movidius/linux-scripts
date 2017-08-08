@@ -9,6 +9,8 @@ while [ $# -gt 0 ]; do
 	[ "$DIR" == "." ] && DIR="$PWD"
 	! grep -q '^/' <<< $DIR && DIR="$PWD/$DIR"
 	! grep -q "scripts" <<< $DIR && echo "Error: trying to install script from outside repo" && exit 4
-	install -v "$1" "`sed 's/.*scripts//' <<< $DIR`"
+	DIR="`sed 's/.*scripts//' <<< $DIR`"
+	[ -e "$DIR" ] || mkdir -p "$DIR"
+	install -v "$1" "$DIR"
 	shift
 done

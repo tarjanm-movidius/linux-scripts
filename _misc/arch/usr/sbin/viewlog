@@ -1,0 +1,13 @@
+#!/bin/sh
+
+LOGFILE="/var/log/everything.log"
+
+GREPEXP=$1
+shift
+for GEXP in $@; do
+  GREPEXP="$GREPEXP\|$GEXP"
+done
+
+cat $LOGFILE | grep -iv $GREPEXP | tail -n 100
+df -h | grep -e "rootfs\|hd" -
+tail -fn 0 $LOGFILE | grep -iv $GREPEXP

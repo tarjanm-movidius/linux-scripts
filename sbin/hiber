@@ -1,7 +1,7 @@
 #!/bin/sh
 
 mkdir /var/lock/hiber || exit 0
-test -f /var/lock/acpisleep && exit 0
+test -f /var/lock/acpisleep && rmdir /var/lock/hiber && exit 0
 
 . /etc/conf.d/netup
 . /etc/conf.d/brightness

@@ -9,11 +9,6 @@
 
 # IPv4 and IPv6 localhost aliases
 127.0.0.1	localhost
-127.0.0.1	lapos
-172.16.253.1	vmnet
-192.168.22.3	svn
-192.168.250.1	plc
-192.168.14.180	comsol
 ::1		localhost
 
 127.0.0.1  005.free-counter.co.uk
@@ -3376,6 +3371,7 @@
 127.0.0.1  apps.conduit-banners.com
 127.0.0.1  appscout.us.intellitxt.com
 127.0.0.1  apps.nastydollars.com
+127.0.0.1  apps.skype.com
 127.0.0.1  apptap.scripps.com
 127.0.0.1  app.ubertags.com
 127.0.0.1  ap.read.mediation.pns.ap.orangeads.fr

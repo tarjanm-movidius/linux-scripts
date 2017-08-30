@@ -314,7 +314,7 @@ char send_buf[BUF_SIZE];
 						goto CONN_ERR;
 					} else if (i) {
 						if (i != clnt_len) LOGPRINTF("  <%02d-%02d> Clnt only sent %d out of %d\n", clnt_sock, mdbg_sock, i, clnt_len)
-						clnt_len = 0;
+						clnt_len -= i;
 					}
 				}
 				if (mdbg_len && FD_ISSET(clnt_sock, &wfds))
@@ -328,7 +328,7 @@ char send_buf[BUF_SIZE];
 						goto CONN_ERR;
 					} else if (i) {
 						if (i != mdbg_len) LOGPRINTF("  <%02d-%02d> MDBG only sent %d out of %d\n", clnt_sock, mdbg_sock, i, mdbg_len)
-						mdbg_len = 0;
+						mdbg_len -= i;
 					}
 				}
 				break;

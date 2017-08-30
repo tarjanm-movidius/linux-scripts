@@ -8,22 +8,22 @@ int main()
  int i;
 /* struct tm
  {
-  int tm_sec;			// Seconds.	[0-60] (1 leap second) 
-  int tm_min;			// Minutes.	[0-59] 
-  int tm_hour;			// Hours.	[0-23] 
-  int tm_mday;			// Day.		[1-31] 
-  int tm_mon;			// Month.	[0-11] 
-  int tm_year;			// Year	- 1900.  
-  int tm_wday;			// Day of week.	[0-6] 
-  int tm_yday;			// Days in year.[0-365]	
+  int tm_sec;			// Seconds.	[0-60] (1 leap second)
+  int tm_min;			// Minutes.	[0-59]
+  int tm_hour;			// Hours.	[0-23]
+  int tm_mday;			// Day.		[1-31]
+  int tm_mon;			// Month.	[0-11]
+  int tm_year;			// Year	- 1900.
+  int tm_wday;			// Day of week.	[0-6]
+  int tm_yday;			// Days in year.[0-365]
   int tm_isdst;			// DST.		[-1/0/1]
  };
  struct timeb
  {
-  time_t time;			// Seconds since epoch, as from `time'.  
-  unsigned short int millitm;	// Additional milliseconds.  
-  short int timezone;		// Minutes west of GMT.  
-  short int dstflag;		// Nonzero if Daylight Savings Time used.  
+  time_t time;			// Seconds since epoch, as from `time'.
+  unsigned short int millitm;	// Additional milliseconds.
+  short int timezone;		// Minutes west of GMT.
+  short int dstflag;		// Nonzero if Daylight Savings Time used.
  };*/
  struct timeb *tim2=(struct timeb *)malloc(sizeof(struct timeb));
  ftime(tim2);
@@ -417,20 +417,20 @@ int main()
  "Szilveszter"};
  char **nevnap[]={jan,feb,mar,apr,maj,jun,jul,aug,sep,okt,nov,dec};
  printf("                                %s\n",nevnap[tim.tm_mon][tim.tm_mday]);
- tim2->time+=86400;tim=*(struct tm *)localtime(&(tim2->time)); 
+ tim2->time+=86400;tim=*(struct tm *)localtime(&(tim2->time));
  printf("                                %s\n",nevnap[tim.tm_mon][tim.tm_mday]);
- tim2->time+=86400;tim=*(struct tm *)localtime(&(tim2->time)); 
+ tim2->time+=86400;tim=*(struct tm *)localtime(&(tim2->time));
  for(i=0;i<19-strlen(honap[tim.tm_mon])-strlen(nap[tim.tm_wday]);i++)printf(" ");
  printf("%d. %s %2d. %s, %s napja\n",tim.tm_year+1900,honap[tim.tm_mon],tim.tm_mday,nap[tim.tm_wday],nevnap[tim.tm_mon][tim.tm_mday]);
- tim2->time+=86400;tim=*(struct tm *)localtime(&(tim2->time)); 
+ tim2->time+=86400;tim=*(struct tm *)localtime(&(tim2->time));
  printf("                                %s\n",nevnap[tim.tm_mon][tim.tm_mday]);
- tim2->time+=86400;tim=*(struct tm *)localtime(&(tim2->time)); 
+ tim2->time+=86400;tim=*(struct tm *)localtime(&(tim2->time));
  printf("                                %s\n",nevnap[tim.tm_mon][tim.tm_mday]);
- tim2->time+=86400;tim=*(struct tm *)localtime(&(tim2->time)); 
+ tim2->time+=86400;tim=*(struct tm *)localtime(&(tim2->time));
  printf("                                %s\n",nevnap[tim.tm_mon][tim.tm_mday]);
- tim2->time+=86400;tim=*(struct tm *)localtime(&(tim2->time)); 
+ tim2->time+=86400;tim=*(struct tm *)localtime(&(tim2->time));
  printf("                                %s\n",nevnap[tim.tm_mon][tim.tm_mday]);
- tim2->time+=86400;tim=*(struct tm *)localtime(&(tim2->time)); 
+ tim2->time+=86400;tim=*(struct tm *)localtime(&(tim2->time));
  printf("                                %s\n",nevnap[tim.tm_mon][tim.tm_mday]);
  return(0);
 }

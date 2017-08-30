@@ -256,7 +256,7 @@ char send_buf[BUF_SIZE];
 						goto CONN_ERR;
 					} else if (i) {
 						if (i != srv_len) LOGPRINTF("  <%02d-%02d> Srv only sent %d out of %d\n", srv_sock, mdbgs_sock, i, srv_len)
-						srv_len = 0;
+						srv_len -= i;
 					}
 				}
 				if (mdbgs_len && FD_ISSET(srv_sock, &wfds))
@@ -270,7 +270,7 @@ char send_buf[BUF_SIZE];
 						goto CONN_ERR;
 					} else if (i) {
 						if (i != mdbgs_len) LOGPRINTF("  <%02d-%02d> MDBG only sent %d out of %d\n", srv_sock, mdbgs_sock, i, mdbgs_len)
-						mdbgs_len = 0;
+						mdbgs_len -= i;
 					}
 				}
 				break;

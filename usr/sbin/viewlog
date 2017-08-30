@@ -9,5 +9,5 @@ for GEXP in $@; do
 done
 
 cat $LOGFILE | grep -iv $GREPEXP | tail -n 100
-df -h | grep -e "rootfs\|hd" -
+df -h | grep -e "root\|hd" -
 tail -fn 0 $LOGFILE | grep -iv $GREPEXP

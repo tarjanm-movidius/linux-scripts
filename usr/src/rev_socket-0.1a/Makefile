@@ -21,6 +21,7 @@ checkflags:
 	@[ "$(shell cat lastflags 2>/dev/null)" = "$(CFLAGS)" ] || echo "$(CFLAGS)" > lastflags
 
 zip:
+	@[ -e rev_socket.ver ]
 	@ln -s . $(ZIPDIR)
 	@tar cvvzf $(ZIPDIR).tar.gz \
 	  $(ZIPDIR)/Makefile \

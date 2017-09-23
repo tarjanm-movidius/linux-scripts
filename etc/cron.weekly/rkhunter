@@ -1,1 +1,2 @@
-nice rkhunter -c --report-warnings-only --skip-keypress --syslog
+nice rkhunter --update
+nice rkhunter -c --report-warnings-only --skip-keypress --syslog --tmpdir /dev/shm/tmp

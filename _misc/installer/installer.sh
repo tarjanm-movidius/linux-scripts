@@ -13,7 +13,7 @@ fi
 python -O -m compileall usr/lib/python*
 chmod -v 644 /etc/logrotate.d/assetace /opt/*.py
 chmod -v 755 /etc/local.d/acetech.start /opt/*.sh
-rm -vf /etc/rc2.d/*hostap* /etc/rc0.d/*kura* /etc/rc6.d/*kura*
+rm -vf /etc/rc*.d/*hostap* /etc/rc*.d/*kura* /etc/rc*.d/*firewall*
 [ -e /etc/hostapd.conf ] && mv -v /etc/hostapd.conf /etc/hostapd.conf~
 [ -e /opt/eurotech ] && mv -v /opt/eurotech /opt/eurotech~
 if ! grep -q "sqlist" "${MCEXT}"; then

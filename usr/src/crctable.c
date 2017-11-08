@@ -28,12 +28,13 @@
  * ----| program to print a carriage-return every 4th column.
  * ----|
  * --------------------------------------------------------------------------
- * ----| Compile with:  cc -Wall crctable.c -o crctable
+ * ----| Compile with:  cc -Wall -s crctable.c -o crctable
  * --------------------------------------------------------------------------
- * ----| Usage:  crctable
- * ----|         crctable | more
+ * ----| Usage:  crctable [polynomial_hex_value]
+ * ----|                   (defaults to 0x143)
  * --------------------------------------------------------------------------
  * ----| Brad Noble - Tue Sep 17 06:13:15 CDT 2002
+ * ----| Marcell Tarjan - extended with c-style prints and paramter input
  * --------------------------------------------------------------------------
  *
  */
@@ -75,7 +76,7 @@ void print_crc_table()
 		for( j = 0; j < 16; j++ )
 		{
 			if( i < 15 || j < 15 ) printf( " 0x%02X,", crctab[ i * 16 + j ] );
-			  else printf( " 0x%02X };\n", crctab[ i * 16 + j ] );
+			  else printf( " 0x%02X };\n", crctab[255] );
 		}
 		if( i < 15 ) printf( " \\\n" );
 	}

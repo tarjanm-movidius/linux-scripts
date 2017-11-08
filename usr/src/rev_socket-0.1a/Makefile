@@ -4,7 +4,7 @@ CC=gcc
 CFLAGS = -Wall -Wno-strict-aliasing
 STRIP_FLAG = -s
 GDB_FLAGS = -g -ggdb3
-ZIPDIR = rev_socket-$(shell cat rev_socket.ver)
+ZIPDIR := rev_socket-$(shell cat rev_socket.ver)
 DEPS = rev_socket.h lastflags
 
 all: stripped

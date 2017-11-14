@@ -7,6 +7,7 @@
       [exec] (ptkdic) {ptkdic}
       [exec] (skype) {apulse skype}
       [exec] (seamonkey) {seamonkey}
+      [exec] (SpeedCrunch) {speedcrunch}
       [exec] (CodeLite) {codelite}
       [exec] (vm) {cd ~/vmware/vm8XP_en; nice -n-10 vmplayer vm8XP_en.vmx > /dev/null 2>/dev/null}
       [exec] (vmDroid) {cd ~/vmware/Android; nice -n-10 vmplayer Android.vmx > /dev/null 2>/dev/null}

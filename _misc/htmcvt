@@ -1,0 +1,11 @@
+#!/bin/sh
+
+IFS='
+'
+
+set `cat $1`
+
+while [ $# -gt 0 ]; do
+echo "$1<BR>"
+shift
+done

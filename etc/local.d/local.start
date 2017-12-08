@@ -30,6 +30,8 @@ if [ -x /usr/sbin/netup ]; then
   /usr/sbin/netup
 fi
 
+/etc/init.d/named start
+
 /etc/init.d/numlock start
 
 if ping -qc1t1w1 ${NTPSERV1} > /dev/null || ping -qc1t1w1 ${NTPSERV2} > /dev/null; then
@@ -37,7 +39,7 @@ if ping -qc1t1w1 ${NTPSERV1} > /dev/null || ping -qc1t1w1 ${NTPSERV2} > /dev/nul
 #  /etc/init.d/ntp-client start
 fi
 
-/etc/init.d/syslog-ng start
+#/etc/init.d/syslog-ng start
 
 /etc/init.d/vixie-cron start
 

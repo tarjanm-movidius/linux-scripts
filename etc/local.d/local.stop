@@ -9,6 +9,6 @@
 . /etc/conf.d/brightness
 
 echo 0 > $BRTNS_DEV
-ps ax | grep -q [x]mms && sudo -u m xmms -q
+ps ax | grep -q [x]mms && sudo -u m qmmp -q
 ps ax | grep -q [m]lnet && nc 127.0.0.1 4000 -ve "echo kill" | logger
 /sbin/shmtool stop

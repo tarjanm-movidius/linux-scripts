@@ -19,7 +19,7 @@ while ! [ -e /dev/shm/permanent/done ]; do sleep 0.5; done
 firefox &
 sleep ${DELAY}
 urxvt -C -title MC -e mc &
-xmms &
+qmmp &
 sleep ${DELAY}
 urxvt -C -title Aterm2 &
 thunderbird &

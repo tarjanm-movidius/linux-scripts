@@ -39,7 +39,7 @@
 [end]
 
 [submenu] (MMedia)
-      [exec] (XMMS) {xmms}
+      [exec] (QMMP) {qmmp}
       [exec] (MPlayer) {gmplayer}
       [exec] (alsamixer) {urxvt -C -title AlsaMixer -e alsamixer}
       [exec] (WorkBone) {urxvt -C -title WorkBone -geometry 70x14 -e cdcd}

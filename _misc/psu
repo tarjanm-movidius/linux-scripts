@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PSU_IP1=163.33.145.22
+PSU_CNT=6
+
+PSU_IPROOT=`cut -d '.' -f 1-3 <<< $PSU_IP1`
+PSU_IPLAST=`cut -d '.' -f 4 <<< $PSU_IP1`
+if [ "$1" == "on" ]; then
+    for i in `seq $PSU_IPLAST $(($PSU_IPLAST + $PSU_CNT))`; do
+        echo "OUTP:GEN ON" | nc -N $PSU_IPROOT.$i 5025
+    done
+elif [ "$1" == "off" ]; then
+    for i in `seq $PSU_IPLAST $(($PSU_IPLAST + $PSU_CNT))`; do
+        echo "OUTP:GEN OFF" | nc -N $PSU_IPROOT.$i 5025
+    done
+else
+    echo "Hamegs @rig203, Usage: $0 <on|off>" 1>&2
+fi

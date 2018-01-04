@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DELAY="0.8"
+DELAY="0.3"
 
 if 3dsw test; then
   if [ -z "`ps ax | grep [3]ddeskd`" ]; then
@@ -14,6 +14,7 @@ fi
 nice wmbatteries >/dev/null 2>/dev/null &
 nice ascpu -withdrawn -bg "#000000" -user "#546920" -sys "#803304" -nice "#166883" > /dev/null 2>/dev/null &
 #rm -f $HOME/.mozilla/firefox/*default/sessionstore.js > /dev/null 2>&1
+sleep ${DELAY}
 urxvt -C -title AlsaMixer -e alsamixer &
 while ! [ -e /dev/shm/permanent/done ]; do sleep 0.5; done
 firefox &
@@ -25,7 +26,7 @@ urxvt -C -title Aterm2 &
 thunderbird &
 sleep ${DELAY}
 urxvt -C -title MC -e mc &
-apulse skype &
+#apulse skype &
 sleep ${DELAY}
 urxvt -C -title Aterm3 &
 

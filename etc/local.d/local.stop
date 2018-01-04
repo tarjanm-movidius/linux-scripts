@@ -9,6 +9,11 @@
 . /etc/conf.d/brightness
 
 echo 0 > $BRTNS_DEV
-ps ax | grep -q [q]mmp && sudo -u m qmmp -q
+ps ax | grep -q [q]mmp && XAUTHORITY=/home/m/.Xauthority sudo -u m qmmp -q
+killall pulseaudio
 ps ax | grep -q [m]lnet && nc 127.0.0.1 4000 -ve "echo kill" | logger
+amixer sset Master,0 off, 0
 /sbin/shmtool stop
+
+. /sys/class/power_supply/BAT0/uevent 2>/dev/null
+logger -t BAT0 "Health: $(($POWER_SUPPLY_ENERGY_FULL * 100 / $POWER_SUPPLY_ENERGY_FULL_DESIGN))%"

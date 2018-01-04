@@ -13,6 +13,7 @@ BRTNSS=`cat $BRTNS_DEV`
 echo 0 > $BRTNS_DEV
 
 /usr/sbin/camsw off
+ps ax | grep -q [f]luxbox && XAUTHORITY=/home/m/.Xauthority sudo -u m slimlock &
 /usr/sbin/chksmb -u
 #/etc/init.d/proftpd stop
 /etc/init.d/pure-ftpd stop

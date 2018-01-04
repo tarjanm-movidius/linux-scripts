@@ -1,8 +1,8 @@
 #!/bin/sh
 
 SYSDIR=/sys/devices/pci0000:00/
-IDVENDOR=04f2
-IDPRODUCT=b307
+IDVENDOR=0bda
+IDPRODUCT=57de
 
 case "$1" in
 'on')

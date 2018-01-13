@@ -22,6 +22,12 @@ case "$group" in
 				[ "$device" == "PBTN" ] && /sbin/hiber | logger -t hiber
 #				/etc/acpi/actions/powerbtn.sh
 				;;
+			sleep)
+				if [ "$device" == "SBTN" ]; then
+					echo -n deep > /sys/power/mem_sleep
+					echo -n mem > /sys/power/state
+				fi
+				;;
 			#lid)
 			#	xset dpms force off
 			#	;;

@@ -1,4 +1,4 @@
-[startup]       {~/.fluxbox/fbstart}
+[startup]        {~/.fluxbox/fbstart}
 [app] (title=AlsaMixer)
   [Workspace]	{0}
   [Dimensions]	{634 586}
@@ -7,12 +7,23 @@
 [end]
 [app] (name=ascpu)
   [Head]	{0}
-  [Dimensions]	{54 76}
+  [Dimensions]	{4% 7%}
   [Deco]	{NONE}
   [Sticky]	{yes}
   [Layer]	{4}
   [Close]	{yes}
   [Alpha]	{188 204}
+[end]
+[app] (name=Qmmp)
+  [Workspace]	{0}
+  [Dimensions]	{726 443}
+  [Position]	(UPPERLEFT)	{0 308}
+[end]
+[app] (name=Equalizer)
+  [Workspace]	{0}
+[end]
+[app] (name=Playlist)
+  [Workspace]	{0}
 [end]
 [app] (name=xmms)
   [Workspace]	{0}

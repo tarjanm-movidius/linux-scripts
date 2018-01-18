@@ -26,19 +26,27 @@ case "$group" in
 				if [ "$device" == "SBTN" ]; then
 					echo -n deep > /sys/power/mem_sleep
 					echo -n mem > /sys/power/state
+#					sleep 1; sleep 1
+#					sudo -u m amixer -D pulse sset Master unmute
+#					alsactl restore
+#					while true; do
+#						amixer sset Master,0 unmute
+#						sleep 0.5
+#						amixer sget Master,0 | grep -q '\[on\]' && sleep 0.5 && amixer sget Master,0 | grep -q '\[on\]' && break
+#					done
 				fi
 				;;
 			#lid)
 			#	xset dpms force off
 			#	;;
 			volumeup)
-				amixer sset Master,0 on, 5%+
+				sudo -u m amixer sset Master,0 on, 5%+
 				;;
 			volumedown)
-				amixer sset Master,0 on, 5%-
+				sudo -u m amixer sset Master,0 on, 5%-
 				;;
 			mute)
-				amixer sset Master,0 toggle
+				sudo -u m amixer sset Master,0 toggle
 				;;
 			*)	log_unhandled $* ;;
 		esac
@@ -79,11 +87,11 @@ case "$group" in
 		case "$action" in
 			headphone)
 				if [ "$id" == "plug" ]; then
-					amixer sset Headphone,0 84,84 unmute
-					amixer sset Speaker,0 84,84 mute
+					sudo -u m amixer sset Headphone,0 84,84 unmute
+					sudo -u m amixer sset Speaker,0 84,84 mute
 				else
-					amixer sset Speaker,0 84,84 unmute
-					amixer sset Headphone,0 84,84 mute
+					sudo -u m amixer sset Speaker,0 84,84 unmute
+					sudo -u m amixer sset Headphone,0 84,84 mute
 				fi
 				;;
 			microphone)

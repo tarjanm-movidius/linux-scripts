@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ "$1" == "off" ] || [ "$1" == "0" ]; then
+	ENA=0
+else
+	[ "$1" != "on" ] && [ "$1" != "1" ] && echo "Usage: $0 <0|off|1|on>" 1>&2 && exit 1
+	ENA=1
+fi
+MOUSEID=`xinput | grep "USB Mouse" | sed 's/.*id=\([0-9]\+\).*/\1/'`
+xinput set-int-prop $MOUSEID "Device Enabled" 8 $ENA

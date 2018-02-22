@@ -8,3 +8,6 @@ else
 fi
 MOUSEID=`xinput | grep "USB Mouse" | sed 's/.*id=\([0-9]\+\).*/\1/'`
 xinput set-int-prop $MOUSEID "Device Enabled" 8 $ENA
+#xset dpms force off
+#read -n 1 -s
+#xinput set-int-prop $MOUSEID "Device Enabled" 8 1

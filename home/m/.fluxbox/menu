@@ -5,7 +5,7 @@
       [exec] (firefox) {[ -e /dev/shm/permanent/done ] && firefox}
       [exec] (thunderbird) {thunderbird}
       [exec] (ptkdic) {ptkdic}
-      [exec] (skype) {apulse skype}
+      [exec] (skype) {nice skypeforlinux}
       [exec] (seamonkey) {seamonkey}
       [exec] (SpeedCrunch) {speedcrunch}
       [exec] (CodeLite) {codelite}

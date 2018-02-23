@@ -4,9 +4,11 @@
 die() {
 
 echo ""
-echo "Usage: $ME [-b] <device filename | -r filename device>" 1>&2
+echo "Usage: $ME [-b|-g|-p] <device filename | -r filename device>" 1>&2
 echo ""
 echo "-b : Use Bzip2 instead of Gzip"
+echo "-g : Use Gzip"
+echo "-p : Use pigz (Parallel gzip) instead of Gzip"
 echo "-r : restore saved partition"
 echo ""
 echo "Examples:"
@@ -25,15 +27,19 @@ exit $1
 
 ME="`basename $0`"
 
+if which pigz > /dev/null 2> /dev/null; then
+	echo "Parallel gzip (pigz) available, using instead of Gzip"
+	COMPR="pigz"
+	DECOMPR="unpigz"
+else
+	COMPR="gzip"
+	DECOMPR="gunzip"
+fi
+
 if [ $# -lt 2 ]; then
   echo "Error: parameter(s) missing!" 1>&2
   die 1
 fi
-
-COMPR="gzip"
-DECOMPR="gunzip"
-EXT="tar.gz"
-RESTORE=0
 
 while [ $# -gt 2 ]; do
 
@@ -42,6 +48,14 @@ while [ $# -gt 2 ]; do
     COMPR="bzip2"
     DECOMPR="bunzip2"
     EXT="tar.bz2"
+    ;;
+  '-g')
+    COMPR="gzip"
+    DECOMPR="gunzip"
+    ;;
+  '-p')
+    COMPR="pigz"
+    DECOMPR="unpigz"
     ;;
   '-r')
     RESTORE=1
@@ -78,9 +92,11 @@ if [ ! -e ${S_DEV} ]; then
 fi
 
 echo "${S_CMD}   <-- Is that what we're doing?"
+[ "$RESTORE" == "1" ] && echo "Warning: ALL DATA on ${S_DEV} will be OVERWRITTEN!" 1>&2
 echo -n "Press Ctrl+C to abort!"
 for I in `seq 5 -1 0`; do echo -n " $I"; sleep 1; done
 echo ""
 
 ${S_CMD}
 ${S_CMD2}
+sync

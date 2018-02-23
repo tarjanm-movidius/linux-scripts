@@ -27,5 +27,5 @@ elif [ "$1" == "off" ]; then
         echo "OUTP:GEN OFF" | nc -q1 $PSU_IPROOT.$i 5025 &
     done
 else
-    echo "Hamegs @ rig201, Usage: $0 <on|off>" 1>&2
+    echo "Hamegs @ rig201, Usage: $0 [(201)|202|203] <on|off>" 1>&2
 fi

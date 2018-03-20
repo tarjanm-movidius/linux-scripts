@@ -1,11 +1,17 @@
 #!/bin/sh
 
-IFS='
-'
-
-set `cat $1`
-
-while [ $# -gt 0 ]; do
-echo "$1<BR>"
-shift
-done
+INP=""
+OUTP=""
+if [ $# -ge 1 ]; then
+	[ ! -e "$1" ] && echo "File '$1' not found" 1>&2 && exit 1
+	INP=" < \"$1\""
+fi
+if [ $# -ge 2 ]; then
+	[ -e "$2" ] && mv "$2" "$2~"
+	OUTP=" >> \"$2\""
+fi
+eval "echo -ne \"<HTML>\n<HEAD>\" $OUTP"
+[ $# -ge 1 ] && eval "echo -e \"\n<TITLE>$1</TITLE>\" $OUTP"
+eval "echo -e \"</HEAD>\n<BODY>\" $OUTP"
+eval "sed 's/$/<BR>/' $INP $OUTP"
+eval "echo -e \"</BODY>\n</HTML>\" $OUTP"

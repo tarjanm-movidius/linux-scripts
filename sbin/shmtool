@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 mkdir /var/lock/shmtool || exit 1
 TGZFILE=/var/tmp/shm.tgz

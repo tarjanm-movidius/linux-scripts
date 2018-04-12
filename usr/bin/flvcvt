@@ -6,7 +6,7 @@ if [ "$1" = "-128" ]; then BITRATE="128"; shift; fi
 if [ "$1" = "-192" ]; then BITRATE="192"; shift; fi
 
 while [ $# -gt 0 ]; do
-  while [ `jobs | wc -l` -ge 4 ]; do sleep 0.3; done
+  while [ `jobs | wc -l` -ge $(nproc) ]; do sleep 0.3; done
   VIDEO_NAME="$1"
   WAV_NAME=`echo "$VIDEO_NAME" | rev | cut -d '.' -f 2- - | rev`
   MP3_NAME=`echo "$WAV_NAME.mp3" | sed 's/_/ /g' | sed 's/ [0-9]\+k//'`

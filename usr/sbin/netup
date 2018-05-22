@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 . /etc/conf.d/netup
 
@@ -19,7 +19,7 @@ if ping -qc1w1 192.168.100.254 > /dev/null; then
 else
 
   if [ "`cat /sys/class/net/${LAN_IF}/carrier`" = "1" ]; then
-    /sbin/ifconfig $LAN_IF 0.0.0.0
+    /bin/ifconfig $LAN_IF 0.0.0.0
     /sbin/dhcpcd -L -C resolv.conf $LAN_IF
     RETVAL=$?
   else

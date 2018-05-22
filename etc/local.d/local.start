@@ -5,6 +5,8 @@
 . /etc/conf.d/brightness
 . /etc/conf.d/ntpclient
 
+#echo -n 1 > /sys/devices/system/cpu/microcode/reload
+
 echo " * Starting firewall ..."
 /etc/conf.d/firewall.sh start
 

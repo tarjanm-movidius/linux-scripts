@@ -1,0 +1,10 @@
+#!/bin/sh
+
+[ -z "$1" ] && echo "Usage: $0 <file_to_flash>" && exit 1
+[ ! -e "$1" ] && echo "Error: file '$1' not found" && exit 3
+FULLPATH="`dirname $1`"
+[ "$FULLPATH" == "." ] && FULLPATH="$PWD"
+grep -q '^/' <<< $FULLPATH || FULLPATH="$PWD/$FULLPATH"
+FULLPATH="$FULLPATH/`basename $1`"
+make -C $MV_COMMON_BASE tcl2 CMD="flash \"$FULLPATH\"; mdbg::quit"
+rm -v "$MV_COMMON_BASE/tempPartFile.bin"

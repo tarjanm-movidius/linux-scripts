@@ -13,6 +13,9 @@ elif [ "$1" == "203" ]; then
 elif [ "$1" == "204" ]; then
     PSU_IP1=163.33.145.40
     shift
+elif [ "$1" == "205" ]; then
+    PSU_IP1=163.33.145.46
+    shift
 else
     PSU_IP1=163.33.145.22
 fi
@@ -30,5 +33,5 @@ elif [ "$1" == "off" ]; then
         echo "OUTP:GEN OFF" | nc -q1 $PSU_IPROOT.$i 5025 &
     done
 else
-    echo "Hamegs @ rig201, Usage: $0 [(201)|202|203|204] <on|off>" 1>&2
+    echo "Hamegs @ rig20x, Usage: $0 [(201)|202|...|205] <on|off>" 1>&2
 fi

@@ -1,9 +1,9 @@
-#mount /dev/sda1 boot/
-mount --bind / mnt/hd/
-mount --bind /sys/ sys/
-mount --bind /proc/ proc/
-mount --bind /run/ run/
-mount --bind /dev/ dev/
-mount --bind /dev/shm dev/shm
+#mount -v /dev/sda1 boot/
+mount -v --bind / mnt/hd/
+mount -v --bind /sys/ sys/
+mount -v --bind /proc/ proc/
+mount -v --bind /run/ run/
+mount -v --bind /dev/ dev/
+mount -v --bind /dev/shm dev/shm
 chroot .
-umount dev/shm dev run proc sys mnt/hd
+umount -v dev/shm dev run proc sys mnt/hd # boot

@@ -16,6 +16,7 @@ fi
 # Put your fun stuff here.
 
 alias xcdroast='xcdroast -n'
+alias mc='grep -q '\'' 1;0;0$'\'' /home/m/.local/share/mc/filepos && mv /home/m/.local/share/mc/filepos /home/m/.local/share/mc/filepos~ && grep -v '\'' 1;0;0$'\'' /home/m/.local/share/mc/filepos~ > /home/m/.local/share/mc/filepos; mc'
 
 if [ -x /usr/bin/fortune ]; then
   /usr/bin/fortune

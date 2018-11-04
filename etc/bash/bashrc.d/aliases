@@ -1,2 +1,2 @@
-alias cdm='cd /mnt'
+alias cdm='pushd /mnt'
 alias cal='cal -3m'

@@ -53,4 +53,5 @@ if [ -x /etc/conf.d/cpufreq -a -z "`ps ax | grep [a]ccel1m`" ]; then
   /etc/conf.d/cpufreq start
 fi
 
+[ -e /home/m/.mldonkey/stats.ini.tmp ] && mv -vf /home/m/.mldonkey/stats.ini.tmp /home/m/.mldonkey/stats.ini.tmp~
 sudo -u m screen -S mldonkey -d -m nice mlnet

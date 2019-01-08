@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo -n deep > /sys/power/mem_sleep
+echo -n mem > /sys/power/state

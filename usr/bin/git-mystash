@@ -1,0 +1,17 @@
+#!/bin/bash
+
+FILELIST=$(git status -uno | grep 'modified:' | sed 's/.*:[\t ]\+\(.*\)/\1/')
+IFS='
+'
+[ -z "$FILELIST" ] && exit 0
+[ -e "stash_restore.sh" ] && mv -v "stash_restore.sh" "stash_restore.sh~" && chmod a-x "stash_restore.sh~"
+echo "#!/bin/bash" > stash_restore.sh
+echo "" >> stash_restore.sh
+
+for i in $FILELIST; do
+    echo "$i"
+    echo "mv -v \"$i~\" \"$i\"" >> stash_restore.sh
+    mv "$i" "$i~"
+    git checkout "$i"
+done
+chmod a+x "stash_restore.sh"

@@ -4,11 +4,11 @@
 
 . /etc/conf.d/mldonkey
 [ -z "${CLI_PORT}" ] && CLI_PORT=4000
+[ -z "${SERVER}" ] && SERVER=localhost
 
-if which ncat >/dev/null 2>/dev/null; then
-  (echo "dllink $1"; echo "q") | ncat ${SERVER} ${CLI_PORT} -w2
-elif which netcat >/dev/null 2>/dev/null; then
-  (echo "dllink $1"; echo "q") | netcat ${SERVER} ${CLI_PORT} -w2
-else
-  (echo "dllink $1"; echo "q") | nc ${SERVER} ${CLI_PORT} -w2
-fi
+NCCMD=`which ncat 2>/dev/null`
+[ -z "$NCCMD" ] && NCCMD=`which netcat 2>/dev/null`
+[ -z "$NCCMD" ] && NCCMD=`which nc 2>/dev/null`
+[ -z "$NCCMD" ] && exit 2
+
+(echo "dllink $1"; echo "q") | ${NCCMD} ${SERVER} ${CLI_PORT} -w2 >/dev/null

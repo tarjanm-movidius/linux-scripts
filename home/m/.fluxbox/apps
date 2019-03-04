@@ -1,4 +1,4 @@
-[startup]        {~/.fluxbox/fbstart}
+[startup]            {~/.fluxbox/fbstart}
 [app] (title=AlsaMixer)
   [Workspace]	{0}
   [Dimensions]	{634 586}
@@ -40,6 +40,11 @@
   [Workspace]	{0}
 [end]
 [app] (title=mc)
+  [Deco]	{NONE}
+  [Maximized]	{yes}
+[end]
+[app] (title=MPLAB X IDE v4.20)
+  [Workspace]	{1}
   [Deco]	{NONE}
   [Maximized]	{yes}
 [end]
@@ -129,4 +134,11 @@
   [Workspace]	{4}
   [Position]	(UPPERLEFT)	{0% 0%}
   [Jump]	{yes}
+[end]
+[app] (name=qmmp) (class=qmmp)
+  [Workspace]	{0}
+  [Deco]	{NONE}
+[end]
+[app] (name=sun-awt-X11-XFramePeer) (class=MPLAB X IDE v5.00)
+  [Close]	{yes}
 [end]

@@ -24,6 +24,7 @@ OnDesktop Mouse2 :workspaceMenu
 OnDesktop Mouse3 :rootMenu
 Mod1 Tab :NextWindow (workspace=[current])
 Mod1 Shift Tab :PrevWindow (workspace=[current])
+Mod2 Up :Maximize
 Control Escape :RootMenu
 Control F9 :ExecCommand killall plugin-container
 Control F11 :ExecCommand qmmp --previous

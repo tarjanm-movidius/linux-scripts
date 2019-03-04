@@ -5,14 +5,15 @@
 
 #define DEBUGPRINTF(...)	fprintf(stderr, __VA_ARGS__)
 #define LOGPRINTF(...)	fprintf(cutScript, __VA_ARGS__)
-//#define LOGPRINTF		printf
 #define BUFLEN			512
+#define CUTCMD			"cutmp3 -i \"$ALBUM\" -O \"$TDIR/"
 
-char ts1[10], ts2[10], cutcmd[128], cutNumbers=0;
+char ts2[10], cutNumbers=0;
 FILE *cutScript;
 
-int findTS(char *buf, int len, char* ts)
+int findTS (char *buf, int len, char* ts)
 {
+
 int i, firstNum = -1;
 
 	for (i=0; i<len && buf[i]; i++)
@@ -40,13 +41,16 @@ int i, firstNum = -1;
 	}
 	if (ts) ts[0] = 0;
 	return 0;
-}
 
-void parseLine(char *buf)
+}	// findTS()
+
+
+void parseLine (char *buf)
 {
 
 static unsigned int lineNo = 1;
-int i=0, t1ofs, itmp=0;
+static char ts1[10];
+int i=0, j, t1ofs;
 
 	// Getting rid of track numbers
 	if (cutNumbers) for (; i<BUFLEN && buf[i]; i++) if (!isdigit(buf[i])) break;
@@ -71,13 +75,12 @@ int i=0, t1ofs, itmp=0;
 		}
 
 		// Searching for a second one, will zero ts2 if not found
-		itmp = findTS(buf+i+t1ofs, BUFLEN-i-t1ofs, ts2);
+		j = findTS(buf+i+t1ofs, BUFLEN-i-t1ofs, ts2);
 
 		// If timestamp was at the beginning, skipping it
-		if (!t1ofs && itmp && (strlen(ts2) == itmp))
+		if (!t1ofs && j && (strlen(ts2) == j))
 		{
-			i += itmp;
-			itmp = 0;
+			i += j;
 			// Getting rid of garbage after ts2
 			for (; i<BUFLEN && buf[i]; i++) if (buf[i] != ' ' && buf[i] != '\t' && buf[i] != '-' && buf[i] != '.') break;
 		}
@@ -92,38 +95,36 @@ int i=0, t1ofs, itmp=0;
 	if (t1ofs)
 	{
 		// t1ofs points to after the timestamp, searching back to its beginning
-		for (itmp = i+t1ofs-1; itmp>i; itmp--) if (!isdigit(buf[itmp]) && buf[itmp] != ':' && buf[itmp] != '(' && buf[itmp] != '[') break;
-		buf[itmp+1] = 0;
+		for (j = i+t1ofs-1; j>i; j--) if (!isdigit(buf[j]) && buf[j] != ':' && buf[j] != '(' && buf[j] != '[') break;
+		buf[j+1] = 0;
 	}
-
-	// Searching for the end of the string
-	for (itmp = i; itmp<BUFLEN && buf[itmp] && buf[itmp] != '\n'; itmp++) continue;
-	if (itmp >= BUFLEN) itmp = BUFLEN - 1;
 	// Getting rid of garbage at the end of the line
-	for (itmp--; itmp>i; itmp--) if (isprint(buf[itmp]) && (buf[itmp] != ' ' && buf[itmp] != '\t' && buf[itmp] != '-')) break;
-	if(itmp == i) return;
-	buf[itmp+1] = 0;
+	for (j=i+strlen(buf+i); j>i; j--) if (isprint(buf[j]) && (buf[j] != ' ' && buf[j] != '\t' && buf[j] != '-')) break;
+	if (j == i) return;
+	buf[j+1] = 0;
 
-	LOGPRINTF("%s", cutcmd);
+	LOGPRINTF("%s", CUTCMD);
 	if (lineNo < 10) LOGPRINTF("0");
 	LOGPRINTF("%u - %s.mp3\" -a %s -b ", lineNo, buf+i, ts1);
 	if (ts2[0]) LOGPRINTF("%s\n", ts2);
 	lineNo++;
-}
 
-int main(int argc, char* argv[])
+}	// parseLine()
+
+
+
+int main (int argc, char* argv[])
 {
 
 FILE *trkListFile;
 char buf[BUFLEN];
 int i;
 
-	if(argc < 3) { DEBUGPRINTF( "Error: parameter missing\n\nUsage: %s <tracklist.txt> <album.mp3> [-]\n", argv[0]); return 2; }
+	if (argc < 3) { DEBUGPRINTF( "Error: parameter missing\n\nUsage: %s <tracklist.txt> <album.mp3> [-]\n", argv[0]); return 1; }
 
 	// Opening tracklist
 	trkListFile = fopen(argv[1], "rb");
-	if (!trkListFile) { perror("fopen"); DEBUGPRINTF("Error opening file \"%s\"\n", argv[1]); return 3; }
-	sprintf(cutcmd, "cutmp3 -i \"%s\" -O \"$TDIR/", argv[2]);
+	if (!trkListFile) { perror("fopen"); DEBUGPRINTF("Error opening file \"%s\"\n", argv[1]); return 2; }
 
 	strcpy(buf, argv[2]);
 	for (i = strlen(buf); i && (buf[i] != '.'); i--) continue;
@@ -143,7 +144,7 @@ int i;
 
 	// Script header
 	if (buf[i] == '.') buf[i] = 0;
-	LOGPRINTF("#!/bin/sh\n\nTDIR=\"%s\"\nmkdir -p \"$TDIR\"\n\n", buf);
+	LOGPRINTF("#!/bin/sh\n\nALBUM=\"%s\"\nTDIR=\"%s\"\nmkdir -p \"$TDIR\"\n\n", argv[2], buf);
 
 	// Checking tracklist for numbers at the beginning of the line
 	while(!feof(trkListFile))
@@ -167,4 +168,5 @@ int i;
 	fclose(trkListFile);
 	fclose(cutScript);
 	return 0;
-}
+
+}	// main()

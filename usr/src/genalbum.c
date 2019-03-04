@@ -54,9 +54,14 @@ int i=0, j, t1ofs;
 
 	// Getting rid of track numbers
 	if (cutNumbers) for (; i<BUFLEN && buf[i]; i++) if (!isdigit(buf[i])) break;
+	if (buf[i] == ':')
+	{
+		if(isdigit(buf[i+1])) i = 0;
+		  else i++;
+	}
 	// Getting rid of garbage at the beginning of the line
 	for (; i<BUFLEN && buf[i]; i++) if (buf[i] != ' ' && buf[i] != '\t' && buf[i] != '-' && buf[i] != '.') break;
-	if(buf[i] == 0 || buf[i] == '\n' ) return;
+	if (buf[i] == 0 || buf[i] == '\n' ) return;
 
 	// Finding timestamp(s)
 	t1ofs = findTS(buf+i, BUFLEN-i, ts1);
@@ -152,7 +157,7 @@ int i;
 		if (fgets(buf, BUFLEN, trkListFile))
 		{
 			for (i = 0; i < BUFLEN && buf[i]; i++) if (!isdigit(buf[i])) break;
-			if ((i == 0 || buf[i] == ':') && buf[i] != 0 && buf[i] != '\n') break;
+			if ((i == 0 || (buf[i] == ':' && isdigit(buf[i+1]))) && buf[i] != 0 && buf[i] != '\n') break;
 		}
 	}
 	if (feof(trkListFile)) cutNumbers = 1;

@@ -127,6 +127,7 @@ int i=0, j, t1ofs;
 	{
 		// Taking care of escaping
 		if (buf[i] == '\"' || buf[i] == '$') OUTPUTC('\\');
+		if (buf[i] == '`') buf[i] = '\'';
 		OUTPUTC(buf[i]);
 		i++;
 	}
@@ -146,7 +147,7 @@ char *fileBuf;
 char *curLine;
 int i;
 
-	if (argc < 3) { DEBUGPRINTF( "Error: parameter missing\n\nUsage: %s <tracklist.txt | -> <album.mp3> [-]\n", argv[0]); return 1; }
+	if (argc < 3) { DEBUGPRINTF( "Error: parameter missing\n\nUsage: %s <tracklist.txt|-> <album.mp3> [-]\n", argv[0]); return 1; }
 
 	// Opening tracklist
 	if (argv[1][0] == '-' && argv[1][1] == 0)

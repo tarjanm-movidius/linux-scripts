@@ -58,7 +58,7 @@ int i=0, j, t1ofs;
 	// Getting rid of track numbers
 	if (cutNumbers)
 	{
-		while (isdigit(buf[i])) i++;
+		while (isdigit(buf[i]) || buf[i] == ' ' || buf[i] == '\t') i++;
 		if (buf[i] == ':')
 		{
 			if(isdigit(buf[i+1])) i = 0;
@@ -186,7 +186,7 @@ int i;
 	while(curLine)
 	{
 		char *nextLine = strchr(curLine, '\n');
-		for (i = 0; isdigit(curLine[i]); i++) continue;
+		for (i = 0; isdigit(curLine[i]) || curLine[i] == '\t' || curLine[i] == ' '; i++) continue;
 		if ((i == 0 || (curLine[i] == ':' && isdigit(curLine[i+1]))) && curLine[i] != 0 && curLine[i] != '\n') break;
 		curLine = nextLine ? (nextLine+1) : NULL;
 	}

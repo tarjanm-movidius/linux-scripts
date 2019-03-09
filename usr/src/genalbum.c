@@ -177,6 +177,7 @@ int i;
 	}
 
 	i = fread (fileBuf, 1, BUFLEN, trkListFile);
+	if (trkListFile != stdin) fclose(trkListFile);
 	if (i < BUFLEN) fileBuf[i] = 0;
 	  else { fileBuf[BUFLEN-1] = 0; DEBUGPRINTF("File exceeds buffer size %u\n", BUFLEN); }
 
@@ -185,7 +186,7 @@ int i;
 	while(curLine)
 	{
 		char *nextLine = strchr(curLine, '\n');
-		for (i = 0; curLine[i] != '\n' && curLine[i]; i++) if (!isdigit(curLine[i])) break;
+		for (i = 0; isdigit(curLine[i]); i++) continue;
 		if ((i == 0 || (curLine[i] == ':' && isdigit(curLine[i+1]))) && curLine[i] != 0 && curLine[i] != '\n') break;
 		curLine = nextLine ? (nextLine+1) : NULL;
 	}
@@ -208,8 +209,7 @@ int i;
 	}
 	if (!ts2[0]) OUTPRINTF("999:99\n");
 
-	fclose(trkListFile);
-	fclose(cutScript);
+	if (cutScript != stdout) fclose(cutScript);
 	return 0;
 
 }	// main()

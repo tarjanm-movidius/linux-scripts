@@ -8,7 +8,7 @@
 #define OUTPRINTF(...)	fprintf(cutScript, __VA_ARGS__)
 #define OUTPUTC(ch_)	putc((ch_), cutScript)
 #define BUFLEN			65536
-#define CUTCMD			"cutmp3 -i \"$ALBUM\" -O \"$TDIR/"
+#define CUTCMD			"\ncutmp3 -i \"$ALBUM\" -O \"$TDIR/"
 
 char ts2[10], cutNumbers=0;
 FILE *cutScript;
@@ -74,7 +74,7 @@ int i=0, j, t1ofs;
 	if (t1ofs)
 	{
 		// We've found a timestamp, printing as end of prev. song if no ts2
-		if(ts2[0] == 0 && lineNo > 1) OUTPRINTF("%s\n", ts1);
+		if(ts2[0] == 0 && lineNo > 1) OUTPRINTF("%s", ts1);
 
 		// If timestamp was at the beginning, skipping it
 		if (strlen(ts1) == t1ofs)
@@ -132,7 +132,7 @@ int i=0, j, t1ofs;
 		i++;
 	}
 	OUTPRINTF(".mp3\" -a %s -b ", ts1);
-	if (ts2[0]) OUTPRINTF("%s\n", ts2);
+	if (ts2[0]) OUTPRINTF("%s", ts2);
 	lineNo++;
 
 }	// parseLine()
@@ -173,7 +173,7 @@ int i;
 		cutScript = fopen(fileBuf, "w");
 		if (!cutScript) { perror("fopen"); DEBUGPRINTF("Error opening output file \"%s\"\n", fileBuf); return 3; }
 		// strtol("0755", 0, 8) == 0x1ED
-		if (chmod (fileBuf, 0x1ED) < 0) { perror("chmod"); DEBUGPRINTF("Error changing output file mode\n"); return 3; }
+		if (chmod (fileBuf, 0x1ED) < 0) { perror("chmod"); DEBUGPRINTF("Error changing output file mode\n"); }
 	}
 
 	i = fread (fileBuf, 1, BUFLEN, trkListFile);
@@ -196,7 +196,7 @@ int i;
 	OUTPRINTF("#!/bin/sh\n\nALBUM=\"%s\"\n", argv[2]);
 	for (i = strlen(argv[2]); i && argv[2][i] != '.'; i--) continue;
 	if (i && argv[2][i] == '.') argv[2][i] = 0;
-	OUTPRINTF("TDIR=\"%s\"\nmkdir -p \"$TDIR\"\n\n", argv[2]);
+	OUTPRINTF("TDIR=\"%s\"\nmkdir -p \"$TDIR\"\n", argv[2]);
 
 	// Reading tracklist
 	curLine = fileBuf;
@@ -207,7 +207,9 @@ int i;
 		parseLine(curLine);
 		curLine = nextLine ? (nextLine+1) : NULL;
 	}
+	free (fileBuf);
 	if (!ts2[0]) OUTPRINTF("999:99\n");
+	  else OUTPUTC('\n');
 
 	if (cutScript != stdout) fclose(cutScript);
 	return 0;

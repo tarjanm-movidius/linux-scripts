@@ -18,6 +18,7 @@ int findTS (char *buf, char* ts)
 {
 
 int i, firstNum = -1;
+unsigned short h=0, m=0;
 
 	for (i=0; buf[i]; i++)
 	{
@@ -25,10 +26,20 @@ int i, firstNum = -1;
 		{
 			if (isdigit(buf[i+1]))
 			{
-				for (i+=2; buf[i]; i++) if (!isdigit(buf[i]) && buf[i] != ':') break;
+				for (i+=2; isdigit(buf[i]) || buf[i] == ':'; i++) if (buf[i] == ':') h++;
 				if (ts)
 				{
-					strncpy (ts, buf + firstNum, i - firstNum);
+					if (h)
+					{
+						// Converting hours to minutes for cutmp3
+						for (h=0, i=firstNum; isdigit(buf[i]); i++) h = h * 10 + buf[i] - '0';
+						for (i++; isdigit(buf[i]); i++) m = m * 10 + buf[i] - '0';
+						m += h * 60;
+						sprintf (ts, "%hu:", m);
+						for (h = strlen(ts), i++; isdigit(buf[i]); h++, i++) ts[h] = buf[i];
+					} else {
+						strncpy (ts, buf + firstNum, i - firstNum);
+					}
 					ts[i-firstNum] = 0;
 				}
 				return i;
@@ -193,10 +204,12 @@ int i;
 	if (!curLine) cutNumbers = 1;
 
 	// Script header
-	OUTPRINTF("#!/bin/sh\n\nALBUM=\"%s\"\n", argv[2]);
+	OUTPRINTF("#!/bin/sh\n\n flvcvt \"%s\"\n\n", argv[2]);
 	for (i = strlen(argv[2]); i && argv[2][i] != '.'; i--) continue;
-	if (i && argv[2][i] == '.') argv[2][i] = 0;
-	OUTPRINTF("TDIR=\"%s\"\nmkdir -p \"$TDIR\"\n", argv[2]);
+	if (i) argv[2][i] = 0;
+	for (i = strlen(argv[2]); i && argv[2][i] != '['; i--) continue;
+	if (i) { if (argv[2][i-1] == ' ') argv[2][i-1] = 0; else argv[2][i] = 0; }
+	OUTPRINTF("ALBUM=\"%s.mp3\"\nTDIR=\"%s\"\nmkdir -vp \"$TDIR\"\n", argv[2], argv[2]);
 
 	// Reading tracklist
 	curLine = fileBuf;
@@ -208,9 +221,9 @@ int i;
 		curLine = nextLine ? (nextLine+1) : NULL;
 	}
 	free (fileBuf);
-	if (!ts2[0]) OUTPRINTF("999:99\n");
-	  else OUTPUTC('\n');
+	if (!ts2[0]) OUTPRINTF("999:99");
 
+	OUTPRINTF("\n\n exec sed -i 's/^ /# /' \"$0\"\n");
 	if (cutScript != stdout) fclose(cutScript);
 	return 0;
 

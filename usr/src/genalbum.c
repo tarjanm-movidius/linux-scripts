@@ -158,7 +158,7 @@ char *fileBuf;
 char *curLine;
 int i;
 
-	if (argc < 3) { DEBUGPRINTF( "Error: parameter missing\n\nUsage: %s <tracklist.txt|-> <album.mp3> [-]\n", argv[0]); return 1; }
+	if (argc < 3) { DEBUGPRINTF( "Error: parameter missing\n\nUsage: %s <tracklist.txt|-> <album_video> [-]\n", argv[0]); return 1; }
 
 	// Opening tracklist
 	if (argv[1][0] == '-' && argv[1][1] == 0)
@@ -207,8 +207,8 @@ int i;
 	OUTPRINTF("#!/bin/sh\n\n flvcvt \"%s\"\n\n", argv[2]);
 	for (i = strlen(argv[2]); i && argv[2][i] != '.'; i--) continue;
 	if (i) argv[2][i] = 0;
-	for (i = strlen(argv[2]); i && argv[2][i] != '['; i--) continue;
-	if (i) { if (argv[2][i-1] == ' ') argv[2][i-1] = 0; else argv[2][i] = 0; }
+	for (i = 0; argv[2][i] && argv[2][i] != '['; i++) continue;
+	if (argv[2][i]) { if (argv[2][i-1] == ' ') argv[2][i-1] = 0; else argv[2][i] = 0; }
 	OUTPRINTF("ALBUM=\"%s.mp3\"\nTDIR=\"%s\"\nmkdir -vp \"$TDIR\"\n", argv[2], argv[2]);
 
 	// Reading tracklist

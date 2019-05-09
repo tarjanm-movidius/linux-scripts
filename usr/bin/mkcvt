@@ -44,7 +44,7 @@ echo "TARGETPATH=\$BITRATE" >> cvt
 echo "" >> cvt
 
 # --- cvt Initial commands ---
-echo "mkdir -v \"\$TARGETPATH\"" >> cvt
+echo "mkdir -vp \"\$TARGETPATH\"" >> cvt
 if test -e audiodump.wav; then
     echo "mv -vf audiodump.wav audiodump_old.wav" >> cvt
 fi

@@ -11,8 +11,10 @@ while [ $# -gt 0 ]; do
   WAV_NAME=`sed 's/ \?\[.*\]//g' <<< "$VIDEO_NAME" | rev | cut -d '.' -f 2- - | rev`
   MP3_NAME=`echo "$WAV_NAME.mp3" | sed 's/_/ /g' | sed 's/ [0-9]\+k//'`
   WAV_NAME=/dev/shm/tmp/`basename "$WAV_NAME.wav"`
+  echo  "mplayer -novideo -vo null -vc null -ao pcm:fast:file=\"$WAV_NAME\" \"$VIDEO_NAME\""
   mplayer -novideo -vo null -vc null -ao pcm:fast:file="$WAV_NAME" "$VIDEO_NAME"
-  ( lame --nohist -m j -q 1 -b $BITRATE "$WAV_NAME" "$MP3_NAME"; rm -v "$WAV_NAME" ) &
+  echo "lame --nohist -m j -q 1 -b $BITRATE \"$WAV_NAME\" \"$MP3_NAME\""
+  ( lame --nohist -m j -q 1 -b $BITRATE "$WAV_NAME" "$MP3_NAME" && rm -v "$WAV_NAME" ) &
   shift
 done
 while [ `jobs | grep -v Done | wc -l` -gt 0 ]; do sleep 1; done

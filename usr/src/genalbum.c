@@ -10,7 +10,10 @@
 #define BUFLEN			65536
 #define CUTCMD			"\ncutmp3 -i \"$ALBUM\" -O \"$TDIR/"
 
-char ts2[10], cutNumbers=0;
+#define F_CUTNUMBERS	1
+#define F_ISMP3		2
+
+char ts2[10], flags=0;
 FILE *cutScript;
 
 // Find timestamp in buf[] and copy it to ts[]
@@ -67,17 +70,17 @@ static char ts1[10];
 int i=0, j, t1ofs;
 
 	// Getting rid of track numbers
-	if (cutNumbers)
+	if (flags & F_CUTNUMBERS)
 	{
 		while (isdigit(buf[i]) || buf[i] == ' ' || buf[i] == '\t') i++;
 		if (buf[i] == ':')
 		{
-			if(isdigit(buf[i+1])) i = 0;
+			if (isdigit(buf[i+1])) i = 0;
 			  else i++;
 		}
 	}
 	// Getting rid of garbage at the beginning of the line
-	while (buf[i] == ' ' || buf[i] == '\t' || buf[i] == '-' || buf[i] == '.' || buf[i] == ')') i++;
+	while (buf[i] == ' ' || buf[i] == '\t' || buf[i] == '-' || buf[i] == '.' || buf[i] == ')' || ((buf[i] == '(' || buf[i] == '[') && isdigit(buf[i+1]))) i++;
 	if (buf[i] == 0 || buf[i] == '\n') return;
 
 	// Finding timestamp(s)
@@ -88,19 +91,19 @@ int i=0, j, t1ofs;
 		if(ts2[0] == 0 && lineNo > 1) OUTPRINTF("%s", ts1);
 
 		// If timestamp was at the beginning, skipping it
-		if (strlen(ts1) == t1ofs)
+		if (strlen(ts1) >= t1ofs-2)
 		{
 			i += t1ofs;
 			t1ofs = 0;
 			// Getting rid of garbage after ts1
-			while (buf[i] == ' ' || buf[i] == '\t' || buf[i] == '-' || buf[i] == '.' || buf[i] == ')' || buf[i] == ']') i++;
+			while (buf[i] == ' ' || buf[i] == '\t' || buf[i] == '-' || buf[i] == '.' || buf[i] == ')' || buf[i] == ']' || ((buf[i] == '(' || buf[i] == '[') && isdigit(buf[i+1]))) i++;
 		}
 
 		// Searching for a second one, will zero ts2 if not found
 		j = findTS(buf+i+t1ofs, ts2);
 
 		// If timestamp was at the beginning, skipping it
-		if (!t1ofs && j && (strlen(ts2) == j))
+		if (!t1ofs && j && (strlen(ts2) >= j-2))
 		{
 			i += j;
 			// Getting rid of garbage after ts2
@@ -201,14 +204,21 @@ int i;
 		if ((i == 0 || (curLine[i] == ':' && isdigit(curLine[i+1]))) && curLine[i] != 0 && curLine[i] != '\n') break;
 		curLine = nextLine ? (nextLine+1) : NULL;
 	}
-	if (!curLine) cutNumbers = 1;
+	if (!curLine) flags |= F_CUTNUMBERS;
 
 	// Script header
-	OUTPRINTF("#!/bin/sh\n\n flvcvt \"%s\"\n\n", argv[2]);
+	OUTPRINTF("#!/bin/sh\n\n");
 	for (i = strlen(argv[2]); i && argv[2][i] != '.'; i--) continue;
-	if (i) argv[2][i] = 0;
+	if (i)
+	{
+		if ((argv[2][i+1] == 'M' || argv[2][i+1] == 'm') \
+		 && (argv[2][i+2] == 'P' || argv[2][i+2] == 'p') \
+		 &&  argv[2][i+3] == '3') flags |= F_ISMP3;
+		  else OUTPRINTF(" flvcvt \"%s\"\n\n", argv[2]);
+		argv[2][i] = 0;
+	}
 	for (i = 0; argv[2][i] && argv[2][i] != '['; i++) continue;
-	if (argv[2][i]) { if (argv[2][i-1] == ' ') argv[2][i-1] = 0; else argv[2][i] = 0; }
+	if (argv[2][i]) { if (i && argv[2][i-1] == ' ') argv[2][i-1] = 0; else argv[2][i] = 0; }
 	OUTPRINTF("ALBUM=\"%s.mp3\"\nTDIR=\"%s\"\nmkdir -vp \"$TDIR\"\n", argv[2], argv[2]);
 
 	// Reading tracklist
@@ -223,7 +233,8 @@ int i;
 	free (fileBuf);
 	if (!ts2[0]) OUTPRINTF("999:99");
 
-	OUTPRINTF("\n\n exec sed -i 's/^ /# /' \"$0\"\n");
+	if (flags & F_ISMP3) OUTPUTC('\n');
+	  else OUTPRINTF("\n\n exec sed -i 's/^ /# /' \"$0\"\n");
 	if (cutScript != stdout) fclose(cutScript);
 	return 0;
 

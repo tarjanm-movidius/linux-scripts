@@ -5,5 +5,5 @@ if [ $# -lt 2 ] || [ `wc -c <<< $@` -lt 380 ] || ! grep -iq '[rd]sa' <<< $1 || !
 	echo "$@" 1>&2
 	exit 1
 fi
-mkdir .ssh 2>/dev/null && chown 700 .ssh && touch .ssh/authorized_keys && chmod 600 .ssh/authorized_keys
-echo -n "no-agent-forwarding,no-port-forwarding,no-X11-forwarding $@" >> .ssh/authorized_keys
+mkdir .ssh 2>/dev/null && chmod 700 .ssh && touch .ssh/authorized_keys && chmod 600 .ssh/authorized_keys
+echo "no-agent-forwarding,no-port-forwarding,no-X11-forwarding $@" >> .ssh/authorized_keys

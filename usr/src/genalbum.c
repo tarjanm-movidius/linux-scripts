@@ -1,3 +1,13 @@
+#if 0 /*
+##### Run this file in shell to compile (e.g. sh genalbum.c) #####
+
+COMPILE="gcc -Wall -O2 -s -o genalbum genalbum.c"
+
+echo "$COMPILE" && $COMPILE
+exit
+*/
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

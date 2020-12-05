@@ -141,6 +141,7 @@ int i=0, j, t1ofs;
 	{
 		// Taking care of escaping
 		if (buf[i] == '\"' || buf[i] == '$') OUTPUTC('\\');
+		if (buf[i] == '/') buf[i] = '-';
 		if (buf[i] == '`') buf[i] = '\'';
 		OUTPUTC(buf[i]);
 		i++;
@@ -217,8 +218,11 @@ int i;
 		  else OUTPRINTF(" flvcvt \"%s\"\n\n", argv[2]);
 		argv[2][i] = 0;
 	}
-	for (i = 0; argv[2][i] && argv[2][i] != '['; i++) continue;
-	if (argv[2][i]) { if (i && argv[2][i-1] == ' ') argv[2][i-1] = 0; else argv[2][i] = 0; }
+	if (!(flags & F_ISMP3))
+	{
+		for (i = 0; argv[2][i] && argv[2][i] != '['; i++) continue;
+		if (argv[2][i]) { if (i && argv[2][i-1] == ' ') argv[2][i-1] = 0; else argv[2][i] = 0; }
+	}
 	OUTPRINTF("ALBUM=\"%s.mp3\"\nTDIR=\"%s\"\nmkdir -vp \"$TDIR\"\n", argv[2], argv[2]);
 
 	// Reading tracklist

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "Hi $USER! You've successfully authenticated, but `hostname` does not provide interactive shell access."
+exit 128

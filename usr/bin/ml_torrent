@@ -17,4 +17,4 @@ else
   fi
 fi
 
-ml_download "torrents/downloads/`basename "$1"`"
+ml_download "torrents/downloads/`basename $1`"

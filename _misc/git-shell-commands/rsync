@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if grep -q '\.\./\|[[:space:]]/\|[[:space:]]\.ssh' <<< " $@"; then
+	echo "Access denied: $@"
+	exit 1
+fi
+exec rsync $@

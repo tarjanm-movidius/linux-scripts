@@ -7,8 +7,8 @@ fi
 REPO_NAME="$1"
 grep -q '\.git$' <<< $REPO_NAME || REPO_NAME="${REPO_NAME}.git"
 if [ -d "$REPO_NAME" ] && [ -n "`ls -1 $REPO_NAME`" ]; then
-    echo "Error: repository '$REPO_NAME' already exists" 1>&2
-    exit 2
+	echo "Error: repository '$REPO_NAME' already exists" 1>&2
+	exit 2
 fi
 mkdir -vp "$REPO_NAME" && cd "$REPO_NAME" && git init --bare
 logger -t git.init -p daemon.notice "Created repo $@ ($?)"

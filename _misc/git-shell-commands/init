@@ -11,4 +11,4 @@ if [ -d "$REPO_NAME" ] && [ -n "`ls -1 $REPO_NAME`" ]; then
 	exit 2
 fi
 mkdir -vp "$REPO_NAME" && cd "$REPO_NAME" && git init --bare
-logger -t git.init -p daemon.notice "Created repo $@ ($?)"
+logger -t git.init -p daemon.notice -- "Created repo $@ ($?)"

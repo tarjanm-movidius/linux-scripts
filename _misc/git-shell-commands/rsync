@@ -1,8 +1,7 @@
 #!/bin/bash
 
 if grep -q '\.\.\|[[:space:]:]/\|[[:space:]:]\.ssh\|git-shell-commands' <<< " $@"; then
-	echo "Access denied: $@" 1>&2
-	logger -t git.rsync -p daemon.err "Access denied: $@"
+	logger -s -t git.rsync -p daemon.err -- "Access denied: $@"
 	exit 1
 fi
 exec rsync $@

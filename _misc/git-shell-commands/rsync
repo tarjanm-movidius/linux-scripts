@@ -1,7 +1,12 @@
 #!/bin/bash
 
-if grep -q '\.\.\|[[:space:]:]/\|[[:space:]:]\.ssh\|git-shell-commands' <<< " $@"; then
+# rsync access for git-fat. Locks the user in 'gitfat-storage' directory
+# (creates it if doesn't exist), doesn't allow absolute paths or '..'
+
+if grep -q '\.\.\|[[:space:]:]/' <<< " $@"; then
 	logger -s -t git.rsync -p daemon.err -- "Access denied: $@"
 	exit 1
 fi
+[ -d "gitfat-storage" ] || mkdir gitfat-storage
+cd gitfat-storage
 exec rsync $@

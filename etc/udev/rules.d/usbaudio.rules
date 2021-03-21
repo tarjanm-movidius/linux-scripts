@@ -1,0 +1,5 @@
+ACTION!="add", SUBSYSTEM!="usb_device", GOTO="usbs_rules_end"
+
+ATTR{idProduct}=="0808", ATTR{idVendor}=="8086", MODE="666"
+
+LABEL="usbs_rules_end"

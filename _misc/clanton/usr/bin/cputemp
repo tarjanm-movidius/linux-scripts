@@ -1,0 +1,27 @@
+#!/bin/bash
+
+FAN_GPIO=19	# IO9 on Arduino connector
+
+mkdir /var/lock/cputemp 2>/dev/null || exit 0
+[ -e /sys/class/gpio/gpio${FAN_GPIO} ] || echo -n "$FAN_GPIO" > /sys/class/gpio/export
+echo -n "out" > /sys/class/gpio/gpio${FAN_GPIO}/direction 
+echo -n "strong" > /sys/class/gpio/gpio${FAN_GPIO}/drive 
+
+OLDTEMP=1000
+T=0
+while sleep 1; do
+	ACTTEMP=`cat /sys/devices/virtual/thermal/thermal_zone0/temp`
+	if [ $ACTTEMP -gt $((OLDTEMP + 1000)) ] || [ $ACTTEMP -lt $((OLDTEMP - 1000)) ]; then
+		logger -t cputemp <<< $ACTTEMP
+		OLDTEMP=$ACTTEMP
+	fi
+	[ $ACTTEMP -le 50000 ] && echo -n "0" > /sys/class/gpio/gpio${FAN_GPIO}/value 
+	[ $ACTTEMP -ge 51000 ] && echo -n "1" > /sys/class/gpio/gpio${FAN_GPIO}/value
+
+	# Poor man's cron
+	T=$((T + 1))
+	if [ $T -gt 86380 ]; then
+		T=0
+		nice /usr/sbin/logrotate /etc/logrotate.conf &
+	fi
+done

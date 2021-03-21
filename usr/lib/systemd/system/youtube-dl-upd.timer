@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily youtube-dl update check
+
+[Timer]
+OnCalendar=daily
+AccuracySec=12h
+Persistent=true
+
+[Install]
+WantedBy=timers.target

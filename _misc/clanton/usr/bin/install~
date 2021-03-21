@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if grep -qe '-[^ ]*m[0-7]' <<< $@; then
+	CHM="chmod `sed 's/.*-[^ ]*m\([0-7]\+\).*/\1/' <<< $@`"
+	shift
+else
+	CHM="false"
+fi
+while [ $# -gt 1 ]; do
+	cp -rv "$1" "${@: -1}"
+	$CHM "${@: -1}/$1"
+	shift
+done
+exit 0

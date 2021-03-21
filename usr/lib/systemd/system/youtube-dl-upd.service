@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily youtube-dl update check
+ConditionACPower=true
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'YTD=`which youtube-dl 2>/dev/null` && $YTD -U 2>&1 | logger -t youtube-dl'
+User=root
+Nice=19
+IOSchedulingClass=idle
+IOSchedulingPriority=7
